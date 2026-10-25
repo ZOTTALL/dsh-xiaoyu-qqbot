@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QQ BOT 控制台</title>
+<link rel="stylesheet" href="/dsh-xiaoyu-qqbot/console.css">
+</head>
+<body>
+<header>
+  <div class="brand">🤖 QQ BOT <small>控制台</small></div>
+  <div id="chip" class="chip">…</div>
+  <div class="grow"></div>
+  <button id="b-all-start" class="primary">一键启动</button>
+  <button id="b-all-stop" class="ghost">全部停止</button>
+  <button id="b-collapse" class="ghost" hidden>收起面板 ‹</button>
+  <button id="b-reload" class="ghost" hidden title="重新加载整个 DSH 页面（插件热更新后需要）">⟳ 刷新页面</button>
+</header>
+<nav id="tabs">
+  <button data-tab="overview" class="on">总览</button>
+  <button data-tab="login">登录 / 二维码</button>
+  <button data-tab="voice">语音</button>
+  <button data-tab="stickers">表情包</button>
+  <button data-tab="persona">人设 / 记忆</button>
+  <button data-tab="limits">限额 / 白名单</button>
+  <button data-tab="tasks">计划 / 巡检</button>
+  <button data-tab="logs">日志</button>
+  <button data-tab="settings">设置</button>
+</nav>
+<main>
+  <!-- 总览 -->
+  <section id="tab-overview" class="on">
+    <div id="setup-banner" class="banner warn" hidden>
+      还没有完成基础设置。先去 <a href="#" data-goto="settings">「设置」</a> 填部署根目录、主人 QQ 号与机器人 QQ 号。
+    </div>
+    <div class="cards" id="svc-cards"></div>
+    <div class="row">
+      <div class="panel grow">
+        <h3>体检 <button id="b-diag" class="mini">重新检查</button></h3>
+        <ul id="diag" class="diag"></ul>
+      </div>
+      <div class="panel">
+        <h3>守护与自启</h3>
+        <label class="sw"><input type="checkbox" id="wd-enabled"> 守护：掉线自动拉起</label>
+        <label class="sw"><input type="checkbox" id="wd-astrbot"> 　└ 自动拉起 AstrBot</label>
+        <label class="sw"><input type="checkbox" id="wd-napcat"> 　└ 自动拉起 NapCat（风控时不拉）</label>
+        <hr>
+        <label class="sw"><input type="checkbox" id="as-astrbot"> DSH 启动时自动开 AstrBot</label>
+        <label class="sw"><input type="checkbox" id="as-napcat"> DSH 启动时自动开 NapCat</label>
+        <label class="sw"><input type="checkbox" id="as-tts"> DSH 启动时自动开语音服务</label>
+        <button id="b-save-cfg" class="mini">保存</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="panel grow">
+        <h3>给主人发一条 QQ <small>（用机器人账号 → 主人）</small></h3>
+        <div class="inline"><input id="send-text" placeholder="例如：测试消息"><button id="b-send">发送</button></div>
+      </div>
+      <div class="panel">
+        <h3>余额 / 用量 <button id="b-metrics" class="mini">刷新</button></h3>
+        <pre id="metrics" class="mono small">点击刷新</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 登录 -->
+  <section id="tab-login">
+    <div class="row">
+      <div class="panel qrbox">
+        <h3>实时登录二维码</h3>
+        <div id="qr-wrap"><img id="qr-img" alt="二维码" hidden><div id="qr-empty" class="muted">当前没有等待扫码的二维码</div></div>
+        <div id="qr-meta" class="muted small"></div>
+        <div class="inline wrap">
+          <button id="b-qr-refresh" class="primary">重启 NapCat 刷新二维码</button>
+          <button id="b-qr-copy" class="ghost">复制二维码链接</button>
+        </div>
+      </div>
+      <div class="panel grow">
+        <h3>登录状态</h3>
+        <div id="login-state" class="bigstate">—</div>
+        <div id="login-msg" class="muted"></div>
+        <div id="login-help" class="help"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 语音 -->
+  <section id="tab-voice">
+    <div class="row">
+      <div class="panel grow">
+        <h3>试听 / 发送 <small id="tts-state"></small></h3>
+        <textarea id="v-text" rows="3" maxlength="300" placeholder="输入要说的话（≤300 字，一句一条效果最好）"></textarea>
+        <div class="inline wrap">
+          <label>语速 <input id="v-speed" type="number" step="0.05" min="0.6" max="1.6" value="1.0" style="width:70px"></label>
+          <button id="b-v-play" class="primary">合成并试听</button>
+          <button id="b-v-send" class="ghost">合成并发 QQ</button>
+          <button id="b-tts-start" class="mini">启动语音服务</button>
+          <button id="b-tts-stop" class="mini">停止</button>
+        </div>
+        <audio id="v-audio" controls hidden></audio>
+        <div id="v-out" class="muted small"></div>
+      </div>
+      <div class="panel">
+        <h3>音色参考</h3>
+        <label>参考音频</label>
+        <select id="v-ref"></select>
+        <label>参考音频里说的原文（必须一致）</label>
+        <textarea id="v-prompt" rows="3"></textarea>
+        <button id="b-v-save" class="primary">应用所选音色</button>
+        <audio id="v-ref-preview" controls preload="none" aria-label="试听所选参考音频"></audio>
+        <p class="muted small">参考音频须为同一人连续说话，原文必须一致。应用后即时生效，无需重启。</p>
+        <hr>
+        <h3>上传新参考音色</h3>
+        <label for="v-upload">选择音频（WAV / MP3 / M4A / FLAC / OGG，≤30MB）</label>
+        <input id="v-upload" type="file" accept=".wav,.mp3,.m4a,.flac,.ogg,.aac">
+        <div class="inline wrap">
+          <label>开始秒数 <input id="v-start" type="number" min="0" step="0.1" value="0" style="width:80px"></label>
+          <label>截取秒数 <input id="v-duration" type="number" min="3" max="10" step="0.1" value="6" style="width:80px"></label>
+        </div>
+        <label class="sw"><input id="v-remove-music" type="checkbox"> 用 UVR5 分离伴奏（较慢，占用显存）</label>
+        <label for="v-upload-prompt">选中片段的准确台词</label>
+        <textarea id="v-upload-prompt" rows="3" placeholder="只写截取片段中实际说出的内容；不知道时可先处理试听，再补台词。"></textarea>
+        <button id="b-v-upload" class="primary">上传并处理参考音频</button>
+        <div id="v-upload-status" class="muted small" role="status" aria-live="polite"></div>
+        <p class="muted small">流程：上传 → 裁剪 / 可选 UVR5 → 32kHz 单声道参考音。处理完成会选中新文件；确认台词后点“应用所选音色”，GPT-SoVITS 会用它合成。此流程不是训练新模型权重。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 表情包 -->
+  <section id="tab-stickers">
+    <div class="panel">
+      <div class="inline wrap">
+        <b id="st-stats"></b><div class="grow"></div>
+        <select id="st-layer"><option value="all">全部</option><option value="library">正式</option><option value="candidate">候选</option><option value="trash">回收站</option></select>
+        <input id="st-q" placeholder="按标签/描述搜索" style="width:160px">
+        <button id="b-st-go" class="mini">搜索</button>
+        <input id="st-upload-tags" placeholder="导入标签（可选，逗号分隔）" aria-label="导入表情包标签" style="width:170px">
+        <label class="upload">＋ 上传<input id="st-file" type="file" accept="image/*" multiple hidden></label>
+      </div>
+      <div id="st-grid" class="grid"></div>
+    </div>
+  </section>
+
+  <!-- 人设 -->
+  <section id="tab-persona">
+    <div class="row">
+      <div class="panel list">
+        <h3>文件</h3>
+        <ul id="doc-list" class="files"></ul>
+        <button id="b-backup" class="mini">立即备份全部</button>
+      </div>
+      <div class="panel grow">
+        <h3 id="doc-title">选择左侧文件</h3>
+        <textarea id="doc-edit" class="editor" spellcheck="false" disabled></textarea>
+        <div class="inline">
+          <button id="b-doc-save" class="primary" disabled>保存（自动备份）</button>
+          <span id="doc-msg" class="muted small"></span>
+        </div>
+        <p class="muted small">AGENTS.md 修改后，在 QQ 里发 <code>/dsh new</code> 让机器人重新加载人设。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 限额 -->
+  <section id="tab-limits">
+    <div class="row">
+      <div class="panel grow">
+        <h3>运行参数 <small>（写入 AstrBot 插件，需重启 AstrBot 生效）</small></h3>
+        <div id="params" class="params"></div>
+        <label>第 N 条附带的提醒文案</label>
+        <textarea id="p-warning" rows="2"></textarea>
+        <div class="inline">
+          <button id="b-params-save" class="primary">保存</button>
+          <button id="b-params-restart" class="ghost">保存并重启 AstrBot</button>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>谁能和机器人说话</h3>
+        <label>允许的 QQ 号（每行一个）</label>
+        <textarea id="al-users" rows="4"></textarea>
+        <label>允许的群号（每行一个）</label>
+        <textarea id="al-groups" rows="3"></textarea>
+        <button id="b-al-save" class="primary">保存并重启 AstrBot</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 计划 -->
+  <section id="tab-tasks">
+    <div class="panel">
+      <h3>计划任务 <button id="b-tasks" class="mini">刷新</button></h3>
+      <table id="task-table"><thead><tr><th>任务</th><th>状态</th><th>上次运行</th><th>结果</th><th>下次运行</th><th></th></tr></thead><tbody></tbody></table>
+      <p class="muted small">结果码 0 = 成功；267011 = 尚未运行；其他数字表示失败或错过（电脑睡眠会让定时任务延后）。</p>
+    </div>
+  </section>
+
+  <!-- 日志 -->
+  <section id="tab-logs">
+    <div class="panel">
+      <div class="inline wrap">
+        <select id="lg-src"><option value="all">全部</option><option value="napcat">NapCat</option><option value="astrbot">AstrBot</option><option value="tts">语音</option><option value="console">控制台</option></select>
+        <input id="lg-filter" placeholder="过滤关键词" style="width:160px">
+        <label class="sw"><input type="checkbox" id="lg-follow" checked> 自动滚动</label>
+        <button id="b-lg-clear" class="mini">清屏</button>
+      </div>
+      <pre id="log" class="log"></pre>
+    </div>
+  </section>
+
+  <!-- 设置 -->
+  <section id="tab-settings">
+    <div class="row">
+      <div class="panel grow">
+        <h3>基础设置</h3>
+        <label>部署根目录 <small>（NapCat / AstrBot / GPT-SoVITS / 工作区都在它下面）</small></label>
+        <input id="s-root" placeholder="例如 D:\QQBot">
+        <div class="inline wrap">
+          <label style="flex:1">主人 QQ 号 <small>（唯一不受陌生人限额的号）</small><input id="s-owner"></label>
+          <label style="flex:1">机器人 QQ 号 <small>（登录 NapCat 用的小号）</small><input id="s-bot"></label>
+        </div>
+        <label>GPT-SoVITS 的 Python 解释器路径 <small>（通常是独立 conda 环境，留空则尝试用 AstrBot 的）</small></label>
+        <input id="s-voicepy" placeholder="例如 C:\Miniconda\envs\gptsovits\python.exe">
+        <button id="b-settings-save" class="primary">保存设置</button>
+        <div id="settings-msg" class="muted small"></div>
+      </div>
+      <div class="panel">
+        <h3>关于</h3>
+        <p class="muted small">dsh-xiaoyu-qqbot — 开源 DSH 插件，把 QQ 机器人（NapCat + AstrBot + GPT-SoVITS）的部署与运维收进一个面板。</p>
+        <p class="muted small">项目地址与文档见仓库 README / docs/。</p>
+      </div>
+    </div>
+  </section>
+</main>
+<div id="toast"></div>
+<script src="/dsh-xiaoyu-qqbot/console.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "prompt_lang": "zh",
+  "default_user": 0,
+  "ref_audio": "REPLACE_WITH_PATH_TO_YOUR_REFERENCE_WAV",
+  "prompt_text": "参考音频里实际说的那句话，必须和音频内容完全一致",
+  "api": "http://127.0.0.1:9880",
+  "text_lang": "zh"
+}

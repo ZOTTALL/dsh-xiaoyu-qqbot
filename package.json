@@ -1,0 +1,54 @@
+{
+  "name": "dsh-xiaoyu-qqbot",
+  "version": "1.0.0",
+  "description": "QQ BOT control console for DeepSeek Harness (DSH): one-click deploy/start/stop for NapCat + AstrBot + GPT-SoVITS, live login QR, voice, stickers, persona editor, rate limits and logs — all inside one DSH desktop panel.",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "qqbot",
+    "napcat",
+    "astrbot",
+    "gpt-sovits",
+    "onebot"
+  ],
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "assets",
+    "tools",
+    "persona-template",
+    "astrbot-bridge-addon",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE",
+    "docs"
+  ],
+  "scripts": {
+    "check": "node --check lib/index.js && node --check lib/core.mjs && node --check lib/config.mjs && node --check lib/deploy.mjs && node --check lib/voice-refs.mjs && node --check assets/console.js && node --check assets/widget.js",
+    "test": "node --test test/*.test.mjs"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huazhipeng059-byte/dsh-xiaoyu-qqbot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/huazhipeng059-byte/dsh-xiaoyu-qqbot/issues"
+  },
+  "homepage": "https://github.com/huazhipeng059-byte/dsh-xiaoyu-qqbot#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "dsh": {
+    "minVersion": "0.2.1-rc.2",
+    "platform": "win32",
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

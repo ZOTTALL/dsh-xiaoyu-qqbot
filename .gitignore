@@ -1,0 +1,30 @@
+# 运行期生成的真实配置/数据：绝不提交，仓库里只有占位模板
+/qqbot.config.json
+/logs/
+/backups/
+/tmp/
+/voice/ref/*.wav
+!/voice/ref/.gitkeep
+workspace/memory/*.md
+!workspace/memory/.gitkeep
+workspace/stickers/lib/
+workspace/stickers/inbox/
+workspace/stickers/index.json
+workspace/voice.json
+astrbot-src/data/plugins/astrbot_plugin_dsh/quoted_ids.json
+astrbot-src/data/config/astrbot_plugin_dsh_config.json
+
+# Node / 测试
+node_modules/
+*.log
+test-host-fail.txt*
+.DS_Store
+Thumbs.db
+
+# Python 编译缓存
+__pycache__/
+*.pyc
+
+# 编辑器
+.vscode/
+.idea/

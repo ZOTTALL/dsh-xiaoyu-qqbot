@@ -1,0 +1,8 @@
+# dsh-xiaoyu-qqbot —— DSH bundle patch
+# Mounts the QQ BOT console into the profile's config tree. Runtime settings (root
+# directory, ports, owner/bot QQ numbers, python paths) live in qqbot.config.json,
+# which this plugin creates on first load (see docs/CONFIG.md) and which the panel's
+# "设置" tab can also edit.
+- insert:
+    - id: dsh-xiaoyu-qqbot
+      name: dsh-xiaoyu-qqbot

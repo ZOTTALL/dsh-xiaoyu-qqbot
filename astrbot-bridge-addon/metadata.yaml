@@ -1,0 +1,24 @@
+name: dsh_xiaoyu_addon
+display_name: QQ BOT 控制台扩展
+short_desc: 为 astrbot_plugin_dsh 补充陌生人限额、自动补表情包与 QQ 消息格式整理
+desc: |
+  本插件是 dsh-xiaoyu-qqbot 的配套扩展，依赖官方 astrbot_plugin_dsh
+  （https://github.com/CCYellowStar2/astrbot_plugin_dsh）已经装好并在跑。
+
+  它本身不转发任何消息，只在 astrbot_plugin_dsh 发消息之前做三件事：
+    1. 陌生人聊天限额（主人之外的人，超过条数自动停止回复）
+    2. 短回复自动配一张表情包（从本地表情包仓库里挑）
+    3. 把长消息按自然句拆成多条 QQ 消息，去掉舞台动作括号
+
+  配置（限额条数、提醒文案、自动补图开关等）在本插件 main.py 顶部的常量，
+  可以直接改，也可以通过 dsh-xiaoyu-qqbot 控制台的「限额 / 白名单」页面改。
+version: 1.0.0
+author: dsh-xiaoyu-qqbot contributors
+repo: "https://github.com/huazhipeng059-byte/dsh-xiaoyu-qqbot"
+astrbot_version: ">=4.16"
+support_platforms:
+  - aiocqhttp
+tags:
+  - dsh
+  - qqbot
+  - companion
