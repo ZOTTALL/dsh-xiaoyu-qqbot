@@ -27,6 +27,18 @@
 - **计划任务**：Windows 任务计划程序集成，面板里能看状态、立即运行、启停。
 - **日志**：四个来源（NapCat / AstrBot / 语音 / 控制台）实时 SSE 推送，UTF-8 解码，不再乱码。
 
+## 截图
+
+| 总览 | 语音 |
+|---|---|
+| ![总览](docs/images/overview.png) | ![语音](docs/images/voice.png) |
+
+| 表情包 | 设置 |
+|---|---|
+| ![表情包](docs/images/stickers.png) | ![设置](docs/images/settings.png) |
+
+> 以上截图用的是本地测试夹具（假 QQ 号、假端口、未连接任何真实服务），不包含任何真实账号信息。
+
 ## 安装
 
 ```bash
