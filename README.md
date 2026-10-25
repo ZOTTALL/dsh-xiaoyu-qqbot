@@ -9,7 +9,7 @@
 
 > 要求 DSH **>= 0.2.1-rc.2**；目前只支持 Windows（NapCat 一体包与进程管理依赖 Win32 API）。
 
-> 使用前请下载前置插件[`astrbot_plugin_dsh`](https://github.com/CCYellowStar2/astrbot_plugin_dsh)
+> 使用前请在dsh中下载安装前置插件[`astrbot_plugin_dsh`](https://github.com/CCYellowStar2/astrbot_plugin_dsh)
 
 > **许可证**：个人/学习/科研/非盈利免费使用；公司内部使用或商业使用需先联系作者获得许可
 > （见下方「许可证」小节）。
