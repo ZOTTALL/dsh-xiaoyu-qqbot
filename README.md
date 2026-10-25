@@ -9,6 +9,9 @@
 
 > 要求 DSH **>= 0.2.1-rc.2**；目前只支持 Windows（NapCat 一体包与进程管理依赖 Win32 API）。
 
+> **许可证**：个人/学习/科研/非盈利免费使用；公司内部使用或商业使用需先联系作者获得许可
+> （见下方「许可证」小节）。这不是标准开源协议。
+
 ## 特性
 
 - **一键部署**：总览页每个组件（NapCat / AstrBot / GPT-SoVITS）都有「一键部署」按钮，自动下载/
@@ -95,7 +98,12 @@ test/             node:test 单元与路由测试
 
 ## 许可证
 
-MIT，见 [LICENSE](LICENSE)。
+**不是 MIT / 标准开源协议**，是本项目自定义的 [dsh-xiaoyu-qqbot Noncommercial License 1.0](LICENSE)：
+
+- 个人、学习、科研、非盈利用途：免费，随便用、改、分发，不用告知。
+- 公司内部使用、商业使用（哪怕只是公司内部跑着用、不对外卖）：**先联系作者取得许可**——在本仓库
+  开 Issue，或私信 GitHub [@ZOTTALL](https://github.com/ZOTTALL)。合理场景一般都会给许可。
+- 完整条款见 [LICENSE](LICENSE)。
 
 ## 致谢
 

@@ -1,21 +1,78 @@
-MIT License
+# dsh-xiaoyu-qqbot Noncommercial License 1.0
 
-Copyright (c) 2026 dsh-xiaoyu-qqbot contributors
+Copyright (c) 2026 ZOTTALL and dsh-xiaoyu-qqbot contributors
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This license applies to the dsh-xiaoyu-qqbot source code and all files in this
+repository unless a file states otherwise.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+## 1. 中文说明（非正式翻译，便于理解；发生冲突时以下方英文正式条款为准）
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+- **个人、学习、科研、非盈利用途**：免费使用、修改、分发，无需告知、无需申请许可，
+  只需保留本许可证和版权声明。
+- **公司 / 组织内部使用、商业使用**（包括但不限于：在公司内部部署运行、作为产品或服务的一部分
+  对外提供、收费使用、集成进商业产品）：**必须先联系作者取得许可**，再使用。联系方式：
+  在本仓库开 GitHub Issue，或通过 GitHub 私信联系 [@ZOTTALL](https://github.com/ZOTTALL)。
+  作者会尽量及时回复，大多数合理场景会给予许可（可能附带条件，例如署名、分成或免费开放等，
+  视具体情况商定）。
+- 未经许可擅自将本项目用于公司/商业用途，视为违反本许可证。
+- 以上中文说明仅为方便理解，不是法律文本；具体权利义务以下方英文正式条款为准。
+
+## 2. Official Terms (English, authoritative)
+
+Permission is hereby granted, free of charge and without prior notice, to any
+person obtaining a copy of this software and associated documentation files
+(the "Software"), to use, copy, modify, merge, publish, and distribute copies
+of the Software, subject to the following conditions:
+
+1. **Personal, educational, academic research, and non-profit use** is
+   permitted free of charge, without notice, and without requesting
+   permission, provided that the above copyright notice and this permission
+   notice are included in all copies or substantial portions of the
+   Software.
+
+2. **Any use by, within, or on behalf of a company, organization, or other
+   commercial entity, and any commercial use** (including but not limited
+   to: internal deployment within a company or organization regardless of
+   whether the Software is resold or exposed externally; offering the
+   Software or any derivative of it as part of a paid product or service;
+   and integrating the Software into a commercial offering) **requires prior
+   written permission from the copyright holder**. To request permission,
+   open a GitHub Issue in this repository, or contact the copyright holder
+   via GitHub at [@ZOTTALL](https://github.com/ZOTTALL). The copyright
+   holder will respond in a reasonable time and will generally grant
+   permission for reasonable use cases, which may be subject to additional
+   conditions (such as attribution, revenue sharing, or a request that the
+   resulting work also be made freely available) agreed upon case by case.
+
+3. Use that falls under condition 2 without having obtained such permission
+   is not authorized by this license and constitutes a violation of its
+   terms.
+
+4. Redistribution of the Software, modified or unmodified, must retain this
+   license file and reproduce both the above copyright notice and this
+   permission notice, including both the Chinese explanatory section and
+   these official terms.
+
+5. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+   THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+   OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+   OTHER DEALINGS IN THE SOFTWARE.
+
+## 3. Definitions
+
+- "Company or organization" means any for-profit or non-profit entity other
+  than an individual acting solely in a personal capacity, including but not
+  limited to corporations, partnerships, sole proprietorships doing business
+  as such, government bodies, and other organizations — regardless of size.
+- "Commercial use" means any use intended for or directed toward commercial
+  advantage or monetary compensation, including internal business operations
+  that are not directly resold, as well as use by freelancers or contractors
+  performing paid work for a client.
+- This license is **not** an OSI-approved open source license, because it
+  restricts use based on who the user is (condition 2 above). It is a
+  source-available license: the source code is public and free for the uses
+  described in condition 1, with a permission requirement for the uses
+  described in condition 2.

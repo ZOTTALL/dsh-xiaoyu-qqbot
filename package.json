@@ -32,7 +32,7 @@
     "check": "node --check lib/index.js && node --check lib/core.mjs && node --check lib/config.mjs && node --check lib/deploy.mjs && node --check lib/voice-refs.mjs && node --check assets/console.js && node --check assets/widget.js",
     "test": "node --test test/*.test.mjs"
   },
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ZOTTALL/dsh-xiaoyu-qqbot.git"
