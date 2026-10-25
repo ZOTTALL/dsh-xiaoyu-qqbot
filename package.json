@@ -35,12 +35,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/huazhipeng059-byte/dsh-xiaoyu-qqbot.git"
+    "url": "git+https://github.com/ZOTTALL/dsh-xiaoyu-qqbot.git"
   },
   "bugs": {
-    "url": "https://github.com/huazhipeng059-byte/dsh-xiaoyu-qqbot/issues"
+    "url": "https://github.com/ZOTTALL/dsh-xiaoyu-qqbot/issues"
   },
-  "homepage": "https://github.com/huazhipeng059-byte/dsh-xiaoyu-qqbot#readme",
+  "homepage": "https://github.com/ZOTTALL/dsh-xiaoyu-qqbot#readme",
   "engines": {
     "node": ">=18"
   },

@@ -30,7 +30,7 @@
 ## 安装
 
 ```bash
-git clone https://github.com/huazhipeng059-byte/dsh-xiaoyu-qqbot.git
+git clone https://github.com/ZOTTALL/dsh-xiaoyu-qqbot.git
 dsh plugin --profile <你的profile> add link:/path/to/dsh-xiaoyu-qqbot
 ```
 

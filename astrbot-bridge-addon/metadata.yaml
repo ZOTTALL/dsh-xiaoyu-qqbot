@@ -14,7 +14,7 @@ desc: |
   可以直接改，也可以通过 dsh-xiaoyu-qqbot 控制台的「限额 / 白名单」页面改。
 version: 1.0.0
 author: dsh-xiaoyu-qqbot contributors
-repo: "https://github.com/huazhipeng059-byte/dsh-xiaoyu-qqbot"
+repo: "https://github.com/ZOTTALL/dsh-xiaoyu-qqbot"
 astrbot_version: ">=4.16"
 support_platforms:
   - aiocqhttp
