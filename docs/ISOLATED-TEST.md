@@ -10,7 +10,7 @@ $env:QQBOT_CONFIG='C:\QQBotTest\qqbot.config.json'
 dsh --profile qqbot-test --from-default-profile web --dump-config
 dsh plugin --profile qqbot-test add github:ZOTTALL/dsh-xiaoyu-qqbot#v1.1.0
 dsh --profile qqbot-test --dump-config
-dsh --profile qqbot-test --port 18990
+dsh --profile qqbot-test --no-open --port 18990
 ```
 
 使用的是**桌面版自带的 dsh 命令**，测试的是同一运行时的 bundle 解析、依赖获取、配置组合与服务启动。它不创建第二个桌面 Electron 窗口，也不把插件装入正式 desktop profile；桌面外壳的操作仍应在自己选择安装后验收。

@@ -104,7 +104,7 @@ node tools/create-demo.mjs C:/path/to/empty-demo
 node tools/preview.mjs 8799
 ```
 
-真实语义集成测试需要额外提供 `QQBOT_MEMORY_PYTHON`、`QQBOT_MEMORY_MODEL`、`QQBOT_MEMORY_RERANKER`，再运行 `npm run test:semantic`；未配置时明确跳过，不把文本检索冒充向量测试。完整原理、资源与边界见 [MEMORY.md](docs/MEMORY.md)。问题报告不要附真实配置 / 聊天 / 密钥，见 [SECURITY](SECURITY.md)。
+真实语义集成测试需要额外提供 `QQBOT_MEMORY_PYTHON`、`QQBOT_MEMORY_MODEL`、`QQBOT_MEMORY_RERANKER`，再运行 `npm run test:semantic`；未配置时明确跳过，不把文本检索冒充向量测试。完整原理、资源与边界见 [MEMORY.md](docs/MEMORY.md)。本次实测记录见 [VALIDATION.md](docs/VALIDATION.md)。问题报告不要附真实配置 / 聊天 / 密钥，见 [SECURITY](SECURITY.md)。
 
 ## 致谢
 
