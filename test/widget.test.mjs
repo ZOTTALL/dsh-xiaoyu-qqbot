@@ -38,10 +38,11 @@ function makeDom() {
   document.activeElement = document.body
   return document
 }
-function run({ fetchResult = { bot: true, chain: 'ok' } } = {}) {
+function run({ fetchResult = { bot: true, chain: 'ok' },privateWidget=false } = {}) {
   const document = makeDom()
   const window = new MockEventTarget()
   window.document = document
+  if(privateWidget){var privateHandle=document.createElement('button');privateHandle.id='dshqq-handle';document.body.appendChild(privateHandle);window.__DSH_QQBOT_WIDGET__={destroy(){throw new Error('private plugin touched')}}}
   window.location = { origin: 'http://localhost', reloadCalled: 0, reload() { this.reloadCalled++ } }
   window.setInterval = () => 1
   window.clearInterval = () => {}
@@ -59,11 +60,11 @@ async function flush() { await new Promise((resolve) => setImmediate(resolve)); 
 test('single edge handle opens and closes drawer without FAB or popup button', async () => {
   const { document } = run()
   await flush()
-  const handle = document.getElementById('dshqq-handle')
-  const drawer = document.getElementById('dshqq-drawer')
+  const handle = document.getElementById('dshpubqq-handle')
+  const drawer = document.getElementById('dshpubqq-drawer')
   assert.ok(handle)
-  assert.equal(document.getElementById('dshqq-fab'), null)
-  assert.equal(document.getElementById('dshqq-pop'), null)
+  assert.equal(document.getElementById('dshpubqq-fab'), null)
+  assert.equal(document.getElementById('dshpubqq-pop'), null)
   assert.equal(handle.textContent, '展开')
   assert.equal(handle.getAttribute('aria-expanded'), 'false')
   assert.match(handle.title, /QQ BOT：在线；链路：在线/)
@@ -82,25 +83,25 @@ test('single edge handle opens and closes drawer without FAB or popup button', a
 test('status tooltip reflects bot and chain state, including degraded/offline', async () => {
   const { document } = run({ fetchResult: { bot: true, chain: 'degraded' } })
   await flush()
-  const handle = document.getElementById('dshqq-handle')
+  const handle = document.getElementById('dshpubqq-handle')
   assert.equal(handle.getAttribute('data-status'), 'warn')
   assert.match(handle.title, /QQ BOT：在线；链路：异常/)
 })
 
 test('outside click and validated frame messages close/reload only from same frame', async () => {
   const { document, window } = run()
-  const handle = document.getElementById('dshqq-handle')
-  const drawer = document.getElementById('dshqq-drawer')
+  const handle = document.getElementById('dshpubqq-handle')
+  const drawer = document.getElementById('dshpubqq-drawer')
   handle.dispatch('click')
   const frame = drawer.children.find((x) => x.tagName === 'IFRAME')
-  window.dispatch('message', { origin: 'https://evil.example', source: frame.contentWindow, data: { type: 'dshqq-close' } })
+  window.dispatch('message', { origin: 'https://evil.example', source: frame.contentWindow, data: { type: 'dshpubqq-close' } })
   assert.equal(drawer.hidden, false)
-  window.dispatch('message', { origin: 'http://localhost', source: {}, data: { type: 'dshqq-close' } })
+  window.dispatch('message', { origin: 'http://localhost', source: {}, data: { type: 'dshpubqq-close' } })
   assert.equal(drawer.hidden, false)
-  window.dispatch('message', { origin: 'http://localhost', source: frame.contentWindow, data: { type: 'dshqq-close' } })
+  window.dispatch('message', { origin: 'http://localhost', source: frame.contentWindow, data: { type: 'dshpubqq-close' } })
   assert.equal(drawer.hidden, true)
   handle.dispatch('click')
-  window.dispatch('message', { origin: 'http://localhost', source: frame.contentWindow, data: { type: 'dshqq-reload' } })
+  window.dispatch('message', { origin: 'http://localhost', source: frame.contentWindow, data: { type: 'dshpubqq-reload' } })
   assert.equal(window.location.reloadCalled, 1)
   document.dispatch('mousedown', { target: document.body })
   assert.equal(drawer.hidden, true)
@@ -108,9 +109,13 @@ test('outside click and validated frame messages close/reload only from same fra
 
 test('reinjection destroys previous instance instead of duplicating UI', () => {
   const first = run()
-  const before = first.document.body.children.filter((x) => x.id === 'dshqq-handle').length
+  const before = first.document.body.children.filter((x) => x.id === 'dshpubqq-handle').length
   assert.equal(before, 1)
   vm.runInNewContext(source, first.context)
-  assert.equal(first.document.body.children.filter((x) => x.id === 'dshqq-handle').length, 1)
-  assert.equal(first.document.body.children.filter((x) => x.id === 'dshqq-drawer').length, 1)
+  assert.equal(first.document.body.children.filter((x) => x.id === 'dshpubqq-handle').length, 1)
+  assert.equal(first.document.body.children.filter((x) => x.id === 'dshpubqq-drawer').length, 1)
+})
+
+test('public widget is namespaced and does not remove or destroy an existing private console',()=>{
+ const {document,window}=run({privateWidget:true});assert.ok(document.getElementById('dshqq-handle'));assert.ok(document.getElementById('dshpubqq-handle'));assert.ok(window.__DSH_QQBOT_WIDGET__);assert.ok(window.__DSH_PUBLIC_QQBOT_WIDGET__)
 })

@@ -1,115 +1,111 @@
-# dsh-xiaoyu-qqbot
+# QQ BOT for DSH Desktop · v1.1.0
 
-一个 [DeepSeek Harness (DSH)](https://github.com/) 桌面端插件：把 QQ 机器人的部署、启停、登录、
-语音、表情包、人设与记忆、陌生人限额、计划任务、日志全部收进 DSH 里的一个面板。
+一个面向 **DeepSeek Harness 桌面版**的 QQ BOT 插件。部署、登录、语音、表情包、人格文件、长期记忆、限额和日志都在同一个侧边栏内管理。包名沿用 `dsh-xiaoyu-qqbot`，界面统一显示 **QQ BOT**，不附带维护者的人格、聊天、账号、密钥或模型权重。
 
-技术栈：[NapCat](https://github.com/NapNeko/NapCatQQ)（QQ 协议端）+
-[AstrBot](https://github.com/Soulter/AstrBot)（QQ ⇄ LLM 网关）+
-[GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)（语音合成，可选）。
+**适配声明：DSH >= 0.2.1-rc.2，Windows。** 本次实际安装验收使用桌面版自带的 **0.2.1-rc.5** 运行时；最低声明不代表每个历史版本均已逐版测试。Node >=18；组件自动部署还需要 Git 和 [uv](https://docs.astral.sh/uv/getting-started/installation/)。
 
-> 要求 DSH **>= 0.2.1-rc.2**；目前只支持 Windows（NapCat 一体包与进程管理依赖 Win32 API）。
+> 许可证沿用 [Noncommercial License 1.0](LICENSE)：个人、学习、科研和非盈利用途免费；商业或公司内部使用请先联系作者。第三方组件与模型各自遵循其许可证。
 
-> 使用前请在dsh中下载安装前置插件[`astrbot_plugin_dsh`](https://github.com/CCYellowStar2/astrbot_plugin_dsh)
+## 1.1.0 新功能
 
-> **许可证**：个人/学习/科研/非盈利免费使用；公司内部使用或商业使用需先联系作者获得许可
-> （见下方「许可证」小节）。
+- **认知星海**：六个语义分区、稳定三维布局、稀疏星海背景、暖色恒星 / 蓝色行星、区域聚焦与真实来源跨区束线；支持原星图、2D、宽屏、原生全屏、Esc、Shift 平移、暂停和持续动效。分区是产品导航，不是人脑功能定位。
+- **本地混合检索**：BGE 中文向量 + SQLite FTS5 / BM25 + RRF + 按需加载的 CPU 交叉编码重排，512 维；不依赖线上 Hindsight，不占显存。原文带来源 / 行号，支持更新删除、重启持久化、范围隔离和上下文预算。
+- **证据回顾**：按日期整理检索原文；`generated=false`，不是完整 Hindsight 生成式 Reflect，不自动覆盖矛盾事实，也没有自动接管 QQ 会话的记忆注入。
+- **联动安装前置桥接**：部署 AstrBot 时自动检测 / 补装官方 `astrbot_plugin_dsh`。总览也提供独立补装按钮。使用固定 GitHub 提交，已有目录与配置不覆盖，下载失败不留下半成品插件。
+- **一键部署配套环境**：选择 AstrBot + 桥接、NapCat、DSH ingress、可选语音源码和本地记忆环境。逐项报告成功、失败或待手动配置，不把“下载完成”当成“账号 / 模型已就绪”。
+- **隔离与脱敏**：独立路由、DOM / 消息命名空间和默认数据目录；完整空白人格 / 记忆占位，初始化只补缺失文件。
 
-## 特性
-
-- **一键部署**：总览页每个组件（NapCat / AstrBot / GPT-SoVITS）都有「一键部署」按钮，自动下载/
-  克隆/建环境；DSH ingress 由桌面端自带，只做可用性检查。
-- **一键启停**：启动顺序自动处理（先 AstrBot 再 NapCat）；全部停止只杀部署目录下的进程，不影响
-  系统里其他 QQ。
-- **实时登录二维码**：直接读 NapCat 的二维码文件，过期自动换新图；识别腾讯风控（`168`）并给出
-  人话解释和下一步。
-- **语音**：合成试听/直接发 QQ；支持上传新参考音频，自动裁剪 + 可选 UVR5 人声分离 + 转换成
-  32kHz 单声道参考音（不训练新模型权重）。
-- **表情包**：网格浏览、搜索、按层筛选，发送/改标签/删除恢复，支持批量上传打标。
-- **人设 / 记忆编辑器**：在面板里直接改 `AGENTS.md` 和记忆文件，保存自动备份；本地 SQLite FTS5
-  检索，零依赖、零网络。
-- **陌生人限额 / 白名单**：条数、提醒文案、重新计数间隔都在面板里改；配套一个独立的 AstrBot 扩展
-  插件（见 [`astrbot-bridge-addon/`](astrbot-bridge-addon)）落地这些规则。
-- **计划任务**：Windows 任务计划程序集成，面板里能看状态、立即运行、启停。
-- **日志**：四个来源（NapCat / AstrBot / 语音 / 控制台）实时 SSE 推送，UTF-8 解码，不再乱码。
+原有登录二维码、风控提示、语音参考音频处理、表情包管理、主人 / 陌生人限额、计划任务、日志、备份功能保留。更新明细见 [CHANGELOG](CHANGELOG.md)。
 
 ## 截图
 
-| 总览 | 语音 |
-|---|---|
-| ![总览](docs/images/overview.png) | ![语音](docs/images/voice.png) |
+以下均由**独立虚构演示工作区**产生，未连接真实 QQ 或复用维护者的数据。
 
-| 表情包 | 设置 |
-|---|---|
-| ![表情包](docs/images/stickers.png) | ![设置](docs/images/settings.png) |
+![总览与联动部署](docs/images/overview-v1.1.jpg)
+![认知星海](docs/images/memory-v1.1.jpg)
+![部署组件选择](docs/images/deploy-v1.1.jpg)
 
-> 以上截图用的是本地测试夹具（假 QQ 号、假端口、未连接任何真实服务），不包含任何真实账号信息。
+## 安装 / 更新到 1.1.0
 
-## 安装
+在 **DSH 桌面端的「插件」→「添加插件」**中填写：
 
-```bash
-git clone https://github.com/ZOTTALL/dsh-xiaoyu-qqbot.git
-dsh plugin --profile <你的profile> add link:/path/to/dsh-xiaoyu-qqbot
+```text
+github:ZOTTALL/dsh-xiaoyu-qqbot#v1.1.0
 ```
 
-打开 DSH 桌面端，刷新页面，右侧会出现一条蓝色把手——点开就是控制台。第一次打开先去「设置」页
-填部署根目录、主人 QQ 号、机器人 QQ 号，然后回「总览」给还没装的组件点「一键部署」。
+也可使用**桌面版安装 / 管理的 `dsh` 命令**（不是另装的 npm CLI）：
 
-详细步骤、目录约定、手动安装路径见 [`docs/DEPLOY.md`](docs/DEPLOY.md)。
-
-## 人设
-
-`persona-template/` 下是人设文件的占位模板（`AGENTS.md`、`memory/*.md`、`voice.json.example`），
-**不包含任何真实人格设定**——把它们复制到你的工作区目录（见 `docs/CONFIG.md` 的 `workspace`
-路径），照着占位提示写成你自己想要的机器人人格。改完在 QQ 里发 `/dsh new` 让它生效。
-
-## 配套的 AstrBot 插件
-
-本仓库假定你已经按官方文档装好了
-[`astrbot_plugin_dsh`](https://github.com/CCYellowStar2/astrbot_plugin_dsh)（把消息桥接到
-DSH 的核心插件，第三方独立维护，本仓库不分发它的代码）。
-
-本仓库额外自带一个小插件 [`astrbot-bridge-addon/`](astrbot-bridge-addon)（陌生人限额、自动
-表情包、动作描写清理），装进 AstrBot 的 `data/plugins/dsh_xiaoyu_addon/` 即可，详见
-[`docs/ADDON.md`](docs/ADDON.md)。
-
-## 安全
-
-面板能启停进程、改文件、跑部署脚本，访问控制和边界说明见 [`docs/SECURITY.md`](docs/SECURITY.md)。
-简要版：只认回环 Host、CSRF 保护、文件白名单、进程操作限定在部署根目录内。
-
-## 开发
-
-```bash
-cd dsh-xiaoyu-qqbot
-npm run check     # node --check 全部 lib/ 和 assets/ 文件
-npm test          # node --test test/*.test.mjs
-node tools/preview.mjs 8799    # 本地预览（无鉴权，仅调试用，别对外暴露）
+```powershell
+dsh plugin --profile desktop add github:ZOTTALL/dsh-xiaoyu-qqbot#v1.1.0
 ```
 
-### 项目结构
+若使用克隆目录：
 
-```
-lib/              宿主插件逻辑（路由、信任栅栏、进程管理、语音、表情包、部署脚本）
-assets/           面板前端（纯 HTML/CSS/JS，无构建步骤）
-tools/            Python/PowerShell 工具脚本（语音、表情包、记忆库、巡检）
-persona-template/ 人设占位模板
-astrbot-bridge-addon/  配套 AstrBot 扩展插件（独立安装）
-docs/             部署、配置、安全、扩展插件说明
-test/             node:test 单元与路由测试
+```powershell
+git clone --branch v1.1.0 https://github.com/ZOTTALL/dsh-xiaoyu-qqbot.git
+dsh plugin --profile desktop add link:C:/path/to/dsh-xiaoyu-qqbot
 ```
 
-## 许可证
+在桌面端重载组件并刷新页面。首次打开「设置」，填写自己的部署根目录、主人 / 机器人 QQ；再在「总览」选择部署组件。**默认不自启服务、不开放陌生人的工具权限。**
 
-**不是 MIT / 标准开源协议**，是本项目自定义的 [dsh-xiaoyu-qqbot Noncommercial License 1.0](LICENSE)：
+已有 1.0.1 用户：先备份 `qqbot.config.json`、整个工作区和 AstrBot 配置。推荐把真实配置放在仓库外，以 `QQBOT_CONFIG` 指向它，再更新依赖。不要拿示例配置覆盖已有配置。回退可重新选择 `#v1.0.1`；先停用新版组件再重载，原始记忆与派生索引均不因回退而删除。
 
-- 个人、学习、科研、非盈利用途：免费，随便用、改、分发，不用告知。
-- 公司内部使用、商业使用（哪怕只是公司内部跑着用、不对外卖）：**先联系作者取得许可**——在本仓库
-  开 Issue，或私信 GitHub [@ZOTTALL](https://github.com/ZOTTALL)。合理场景一般都会给许可。
-- 完整条款见 [LICENSE](LICENSE)。
+## 前置桥接：两个插件，分别安装
+
+| 组件 | 安装位置 | 本项目怎样处理 |
+|---|---|---|
+| [`astrbot_plugin_dsh`](https://github.com/CCYellowStar2/astrbot_plugin_dsh) | **AstrBot** 的 `data/plugins/astrbot_plugin_dsh` | 部署 AstrBot 时联动补装；也可点「检测 / 补装 DSH 桥接」 |
+| [`dsh-astrbot-ingress`](https://github.com/CCYellowStar2/dsh-astrbot-ingress) | **DSH 桌面端**的插件列表 | 检测在线状态；缺失时经宿主 pluginManager 安装；宿主要求重启时显示待完成 |
+
+**不要把 AstrBot 插件填进 DSH 插件列表。** 两端都加载后才形成 `QQ → NapCat → AstrBot → DSH ingress → DSH`。同机桥接可按上游机制发现 ingress 信标；容器部署、端口映射、token 和权限仍需按上游说明配置。安装来源 / 固定提交见 [tools/upstreams.json](tools/upstreams.json)。
+
+## 陌生人好友私聊 / QQ 群聊：额外配置 AstrBot
+
+**想使用陌生人加好友对话、好友申请处理或 QQ 群群聊，需要额外配置 AstrBot**：OneBot 适配器、触发方式 / 唤醒词、群与用户白名单、模型提供方、群会话隔离、好友申请处理及本项目的可选限额扩展。不要仅安装桥接就向所有人开放 DSH 工具。
+
+- **人格文件可以复用 DSH 中的内容**：把自己确认需要的 `AGENTS.md` 规则复制 / 整理为 AstrBot 人格；仅设置同一份文件不会让普通 AstrBot 聊天自动获得 DSH 的工具或权限。可通过设置工作区复用自己已有的人格文件；模板初始化不会覆盖它们。
+- **模型密钥可以复用自己的可用 DSH API 密钥**：经 `/dsh` 桥接的请求直接使用 DSH 当前模型配置，无需复制密钥；由 AstrBot 独立回复的陌生人 / 群聊，则在 AstrBot 模型提供方中自行填写相应 API 地址与密钥。DSH 登录态 / 临时 OAuth 令牌与普通模型 API key 不能混用。插件不会读取、展示或自动复制你的 DSH 凭据。
+
+详细说明：[部署](docs/DEPLOY.md) · [配置](docs/CONFIG.md) · [桥接联动](docs/BRIDGE.md) · [陌生人 / 群聊](docs/CHAT-MODES.md) · [记忆架构](docs/MEMORY.md)。
+
+## 一键部署的完成范围
+
+| 组件 | 自动完成 | 用户仍需完成 |
+|---|---|---|
+| AstrBot + 官方桥接 | 固定提交源码、独立 Python 3.12 环境、pyproject 依赖、桥接检测 / 安装 | WebUI 初始化、OneBot / 模型 / 权限配置；运行中安装后重载桥接 |
+| NapCat | 校验 SHA256 的 Windows OneKey 启动器 | 首次由启动器准备 QQ / 协议环境并扫码；OneBot 地址与访问凭据 |
+| DSH ingress | 已在线则跳过；可用宿主中联动安装固定提交 | 按宿主要求启用 / 重启；自定义端口 / 容器 token |
+| GPT-SoVITS | 固定源码准备 | 官方环境 / 权重 / 授权参考音频；本项目明确标记为 `partial` |
+| 本地向量环境 | 独立 Python 3.11、固定依赖与哈希校验模型、CPU 推理配置 | 安装 uv；首次下载约 320MB 模型文件，预留内存；无需模型 API key |
+
+## 与现有组件不冲突的测试方法
+
+最稳妥的方式是 **独立 `DSH_HOME` + 独立测试 profile + 独立 `QQBOT_CONFIG` / 数据目录 / 端口**。不要复制现有 DSH 凭据，不要把测试版装进正在使用的 `desktop` profile。本项目的公开入口 `/dsh-xiaoyu-qqbot` 和 `dshpubqq-*` DOM 与另一套控制台分离；如果主动把两套配置指向同一个服务目录，仍可能相互操作同一服务。
+
+隔离命令与本次验证边界见 [隔离测试](docs/ISOLATED-TEST.md)。
+
+## 人格与记忆占位
+
+`persona-template/` 保留身份、底层规则、性格、语言、状态、能力、成长、事实、用户档案、背景知识、表情包约定、日记与陌生人记录等结构，内容均为 `{{待填写}}` 或基础规则。示例日期是虚构的，不是维护者的聊天记录。数据库、好友申请记录、音色文件、真实密钥和运行目录不分发。
+
+```powershell
+# 使用自己的 QQBOT_CONFIG；只补缺失模板，不覆盖已有内容
+npm run init:workspace
+```
+
+## 开发与验证
+
+```powershell
+npm run check
+npm test
+npm run privacy
+node tools/create-demo.mjs C:/path/to/empty-demo
+# 将上条输出的配置路径设为 QQBOT_CONFIG，再启动本机只读预览
+node tools/preview.mjs 8799
+```
+
+真实语义集成测试需要额外提供 `QQBOT_MEMORY_PYTHON`、`QQBOT_MEMORY_MODEL`、`QQBOT_MEMORY_RERANKER`，再运行 `npm run test:semantic`；未配置时明确跳过，不把文本检索冒充向量测试。完整原理、资源与边界见 [MEMORY.md](docs/MEMORY.md)。问题报告不要附真实配置 / 聊天 / 密钥，见 [SECURITY](SECURITY.md)。
 
 ## 致谢
 
-- [NapCat](https://github.com/NapNeko/NapCatQQ)
-- [AstrBot](https://github.com/Soulter/AstrBot)
-- [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
-- [astrbot_plugin_dsh](https://github.com/CCYellowStar2/astrbot_plugin_dsh) by CCYellowStar2
+[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) · [NapCat](https://github.com/NapNeko/NapCatQQ) · [AstrBot](https://github.com/AstrBotDevs/AstrBot) · [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS) · [DSH 桥](https://github.com/CCYellowStar2/astrbot_plugin_dsh) · [DSH ingress](https://github.com/CCYellowStar2/dsh-astrbot-ingress) · [BGE](https://github.com/FlagOpen/FlagEmbedding)。

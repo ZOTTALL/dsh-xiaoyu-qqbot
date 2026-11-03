@@ -17,7 +17,7 @@ test('检测函数：全新目录判定三个组件都未安装', async () => {
   tempRoot()
   const deploy = await freshDeploy()
   const status = deploy.groupedDeployStatus()
-  assert.deepEqual(status, { napcat: false, astrbot: false, tts: false })
+  assert.deepEqual(status, { napcat: false, astrbot: false, tts: false, bridge:false })
 })
 
 test('检测函数：放好对应文件后判定已安装（幂等跳过网络的前提）', async () => {
@@ -28,9 +28,10 @@ test('检测函数：放好对应文件后判定已安装（幂等跳过网络�
   fs.mkdirSync(path.join(root, 'astrbot-src', '.venv', 'Scripts'), { recursive: true })
   fs.writeFileSync(path.join(root, 'astrbot-src', '.venv', 'Scripts', 'python.exe'), '')
   fs.writeFileSync(path.join(root, 'astrbot-src', 'main.py'), '')
+  fs.writeFileSync(path.join(root,'astrbot-src','.qqbot-env-ready.json'),'{}')
   fs.mkdirSync(path.join(root, 'voice', 'GPT-SoVITS'), { recursive: true })
   fs.writeFileSync(path.join(root, 'voice', 'GPT-SoVITS', 'api_v2.py'), '')
-  assert.deepEqual(deploy.groupedDeployStatus(), { napcat: true, astrbot: true, tts: true })
+  assert.deepEqual(deploy.groupedDeployStatus(), { napcat: true, astrbot: true, tts: true, bridge:false })
 })
 
 test('deployNapcat 在已安装时立即 done，不触发下载', async () => {

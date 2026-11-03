@@ -49,3 +49,9 @@
 
 `ownerQq` / `botQq` 不会被提交进仓库——`.gitignore` 已经排除了生成后的 `qqbot.config.json`。
 如果你 fork 本仓库继续开发，记得检查有没有不小心把真实号码写进了提交。
+
+## 1.1.0 记忆与升级
+
+工作区路径和 memoryDir 可分别配置；修改后记忆服务会重新绑定当前路径，不继续读旧工作区。向量运行配置自动写在 workspace/data 中，不在真实配置示例中放模型路径或密钥。未填完的 {{占位}} 段落不会进入检索。
+
+真实 qqbot.config.json 不进 Git 或 npm 包；升级前放到仓库外，用 QQBOT_CONFIG 指定。每个测试实例使用独立配置、数据根目录与服务端口，见 ISOLATED-TEST.md。

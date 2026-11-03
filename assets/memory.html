@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QQ BOT · 记忆空间</title><link rel="stylesheet" href="/dsh-xiaoyu-qqbot/memory.css"></head>
+<body>
+<header class="topbar">
+  <a class="back" href="/dsh-xiaoyu-qqbot/ui" aria-label="返回控制台">‹</a>
+  <div class="identity"><span class="whale">BOT</span><div><strong>记忆空间</strong><small>MEMORY ATLAS</small></div></div>
+  <div class="engine-indicator"><span class="live-dot"></span><span id="engine-label">本地记忆</span></div>
+  <div class="top-actions"><select id="atlas-mode" aria-label="空间布局"><option value="brain">认知脑图</option><option value="stars">原始星图</option></select><select id="dimension" aria-label="显示维度"><option value="3d">3D 立体</option><option value="2d">2D 投影</option></select><button id="settings-toggle">引擎设置</button><button id="wide">宽屏</button><button id="fullscreen" aria-pressed="false" aria-controls="stage" title="只全屏显示思维图，Esc 返回">全屏思维图</button><button id="export">导出视图</button></div>
+</header>
+<div class="workspace">
+  <aside class="filters">
+    <p class="eyebrow">LOCAL MEMORY · YOUR DATA</p><h1>每一段记忆，<br>都有来处。</h1>
+    <label class="search"><span>⌕</span><input id="search" type="search" placeholder="寻找人、事或一句话" aria-label="搜索记忆"></label>
+    <nav class="view-picker" aria-label="记忆视图"><button data-view="entities" class="active">关系网</button><button data-view="memories">证据网</button><button data-view="timeline">时间线</button></nav>
+    <section class="region-section"><div class="region-heading">认知分区 <button id="region-reset">总览</button></div><div id="region-list" class="region-list"></div><p class="fineprint">分区是语义导航，不是记忆孤岛。点击聚焦，再点节点查看原文。</p></section><div class="filter-group"><label for="scope">记忆范围</label><select id="scope"><option value="owner">主人与机器人</option><option value="stranger">陌生人记录（独立）</option><option value="all">全部（管理视角）</option></select></div>
+    <div class="filter-group"><label for="category">记忆类别</label><select id="category"><option value="">全部类别</option><option value="fact">事实与偏好</option><option value="experience">共同经历</option><option value="persona">人格与成长</option><option value="knowledge">背景与工具知识</option></select></div>
+    <div class="filter-group"><label>事件日期 <span class="muted">仅已知日期</span></label><div class="date-row"><input id="from" type="date" aria-label="开始日期"><input id="to" type="date" aria-label="结束日期"></div></div>
+    <div class="filter-group" id="weight-group"><label for="weight">最少共现 <output id="weight-value">1 次</output></label><input id="weight" type="range" min="1" max="8" value="1"></div>
+    <div class="filter-group density-group"><label for="density">连线简化 <output id="density-value">4 / 节点</output></label><input id="density" type="range" min="2" max="10" value="4"><p class="fineprint">保留强关联，减轻重复连线；原始关系不删除。</p></div><div class="recency" title="当前视图：70% 原文提及次数 + 30% 加权关联强度（对数归一化）；不代表模型重要性或置信度。"><div class="gradient"></div><div><span>低特征 · 行星</span><span>高特征 · 恒星</span></div></div>
+    <div class="counts"><div><strong id="stat-memory">—</strong><span>记忆片段</span></div><div><strong id="stat-source">—</strong><span>来源文件</span></div><div><strong id="stat-link">—</strong><span>当前连线</span></div></div>
+    <p class="fineprint" id="provenance">连线表示同一片段中的共现，不代表因果或模型神经元连接。</p>
+    <button class="primary" id="add-toggle">＋ 记下一件事</button>
+    <button class="quiet" id="recall-toggle">语义回忆 / 证据回顾</button><button class="quiet" id="memory-install">部署 / 检查本地向量环境</button><div class="index-health" id="index-health" role="status">本地索引 · 正在检查</div>
+    <p class="version">QQ BOT Memory · v1.1.0<br><span id="last-update">正在读取真实记忆…</span></p>
+  </aside>
+  <main class="stage" id="stage">
+    <div class="stage-heading"><div><span class="eyebrow" id="view-kicker">COGNITIVE ATLAS</span><h2 id="view-title">QQ BOT 认知星海。</h2><small id="edge-count" class="edge-count">正在建立空间…</small></div><span class="scope-label" id="scope-label">主人与机器人</span></div>
+    <canvas id="graph" role="img" aria-label="真实记忆关系网；也可通过时间线和右侧列表访问来源"></canvas>
+    <div id="timeline" class="timeline" hidden></div>
+    <div id="empty" class="empty" hidden><strong>这里还没有对应的记忆。</strong><span>换个关键词，或放宽筛选范围。</span><button id="clear-filters">清除筛选</button></div>
+    <div id="tooltip" class="tooltip" hidden></div>
+    <div class="canvas-tools"><button id="exit-fullscreen" hidden title="退出全屏（Esc）">退出全屏</button><button id="zoom-in" aria-label="放大">＋</button><button id="zoom-out" aria-label="缩小">－</button><button id="fit">适应画布</button><span></span><button id="cruise" aria-pressed="true">关闭巡航</button><button id="all-edges" aria-pressed="false">全部连线</button><button id="pause" aria-pressed="false">暂停动效</button></div>
+    <div class="navigation-help" id="pan-hint">按住shift拖动平移</div><div class="stage-footer"><span id="activity" aria-live="polite"><i class="live-dot"></i> 等待索引</span><span id="gesture-hint">拖动旋转 · 滚轮缩放</span></div>
+    <div id="warning" class="warning" role="status" hidden></div>
+  </main>
+  <aside class="details">
+    <div class="details-heading"><span class="eyebrow">MEMORY INSPECTOR</span><button id="clear-selection" aria-label="取消选择">×</button></div>
+    <div id="selection"><div class="selection-empty"><div class="orbit">◎</div><h3>六个分区，同一片记忆。</h3><p>点一个节点，看看它与哪些记忆有关，以及机器人从哪里记住了它。</p></div></div>
+    <div id="recent"><h3>最近写入的原文</h3><div id="recent-list"></div></div>
+  </aside>
+</div>
+<dialog id="add-dialog"><form id="add-form"><span class="eyebrow">RETAIN A MOMENT</span><h2>记下一件事</h2><p>保存为独立 Markdown 原文，不覆盖已有档案。</p><label for="note">想让机器人记住什么？</label><textarea id="note" rows="6" maxlength="6000" required placeholder="例如：下次整理报告时，先检查数据和图表，再写结论。"></textarea><p class="form-error" id="add-error" role="alert"></p><div class="dialog-actions"><button type="button" data-close="add-dialog">取消</button><button class="primary" id="save-note">保存记忆</button></div></form></dialog>
+<dialog id="recall-dialog"><form id="recall-form"><span class="eyebrow">RECALL WITH EVIDENCE</span><h2>试试回忆</h2><p>返回原文证据，不编造回答；使用本机中文向量与 BM25 混合检索。</p><label for="recall-query">你想问什么？</label><div class="recall-search"><input id="recall-query" required placeholder="上次语音服务的音色是什么？"><button class="primary">检索</button></div><label class="review-option"><input id="review-mode" type="checkbox">按时间回顾证据（不生成推论）</label><div id="recall-results" aria-live="polite"></div><div class="dialog-actions"><button type="button" data-close="recall-dialog">关闭</button></div></form></dialog>
+<dialog id="engine-dialog"><form id="engine-form"><span class="eyebrow">YOUR DATA, YOUR ENGINE</span><h2>记忆引擎</h2><p>本地模式无需订阅、模型密钥或联网。可连接独立自托管 Hindsight，不读取现有 Cloud 账号。</p><label for="engine-mode">图谱数据源</label><select id="engine-mode"><option value="local">本地原文共现图（默认）</option><option value="hindsight">自托管 Hindsight bank</option></select><label for="engine-url">自托管服务地址</label><input id="engine-url" placeholder="http://127.0.0.1:8888"><label for="engine-bank">专用 Bank</label><input id="engine-bank" value="qqbot-owner"><p class="fineprint">仅接受本机地址。保存不会上传本地原文或触发模型抽取。需先在自托管服务中准备该 bank；认证 Token 可在宿主环境设置 QQBOT_HINDSIGHT_TOKEN。</p><p id="engine-error" class="form-error" role="alert"></p><div class="dialog-actions"><button type="button" data-close="engine-dialog">取消</button><button class="primary">保存并连接</button></div></form></dialog>
+<div id="toast" role="status"></div>
+<script src="/dsh-xiaoyu-qqbot/memory-brain.js"></script>
+<script src="/dsh-xiaoyu-qqbot/memory-3d.js"></script>
+<script src="/dsh-xiaoyu-qqbot/memory-fullscreen.js"></script>
+<script src="/dsh-xiaoyu-qqbot/memory.js"></script>
+</body></html>

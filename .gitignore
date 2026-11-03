@@ -28,3 +28,14 @@ __pycache__/
 # 编辑器
 .vscode/
 .idea/
+
+# All live workspaces, model/runtime caches and secret files
+/workspace/
+/memory-runtime/
+/.env*
+*.sqlite
+*.sqlite3
+*.db
+*.db-*
+.venv/
+.privacy-forbidden.local.json

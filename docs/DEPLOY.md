@@ -1,59 +1,55 @@
-# 部署说明
+# Windows 桌面版部署
 
-本插件管理四个组件，面板「总览」页每个组件都有自己的卡片：
+## 前提
 
-| 组件 | 作用 | 一键部署能做到什么 |
-|---|---|---|
-| NapCat | QQ 协议端，机器人账号登录用它 | 下载官方一体包、解压到部署根目录 |
-| AstrBot | QQ ⇄ LLM 网关 | `git clone` 官方仓库、建 venv、`pip install` |
-| GPT-SoVITS | 语音合成 | `git clone` 官方仓库；权重/独立环境需手动按官方文档装 |
-| DSH ingress | DSH 桌面端自带的入站插件 | 不部署，只检测是否可用并给出修复提示 |
+DSH 桌面版 >=0.2.1-rc.2；本次实测为桌面自带运行时 0.2.1-rc.5。安装 Git 和 uv。所有真实配置、依赖、日志、人格、记忆与模型保留在你自己的数据目录，不提交到插件仓库。
 
-## 目录约定
+1. 在 DSH 插件页添加 `github:ZOTTALL/dsh-xiaoyu-qqbot#v1.1.0`，重载组件并刷新页面。
+2. 在插件「设置」填写部署根目录和 QQ 号。已有配置不要被示例覆盖；推荐使用仓库外 QQBOT_CONFIG。
+3. 在「总览」点「一键部署配套环境」，选择组件。安装器不会自动登录 QQ、批准好友或开放陌生人权限。
+4. 配置完 OneBot / 模型 / 权限后再启动服务，并按 [BRIDGE.md](BRIDGE.md) 验证两端桥接。
 
-一键部署和各工具脚本都假设这样的目录结构（根目录在「设置」页配置，默认 `%SystemDrive%\DSH-QQBOT`）：
+## 默认目录
 
-```
-<根目录>/
-├─ onekey/NapCat.Shell/          NapCat 一体包
-├─ astrbot-src/                  AstrBot 源码 + .venv
-│  └─ data/plugins/
-│     ├─ astrbot_plugin_dsh/     官方 DSH 桥接插件（需要你单独装，见下）
-│     └─ dsh_xiaoyu_addon/       本插件附带的扩展（见 docs/ADDON.md）
-├─ voice/
-│  ├─ GPT-SoVITS/                GPT-SoVITS 源码
-│  └─ ref/                       参考音色 wav
-├─ workspace/                    机器人人设与记忆（见 persona-template/）
-│  ├─ AGENTS.md
-│  ├─ memory/
-│  ├─ stickers/
-│  └─ voice.json
-├─ logs/
-├─ backups/
-└─ tmp/
+```text
+<部署根目录>/
+  astrbot-src/                       AstrBot 固定源码 + .venv
+    data/plugins/astrbot_plugin_dsh/ 官方桥接（联动安装，已有目录不覆盖）
+  onekey/NapCat.Shell/               NapCat OneKey 安装器及 bootmain
+  voice/GPT-SoVITS/                  可选语音源码，权重与环境另备
+  memory-runtime/                    可选本地记忆 Python / ONNX 模型
+  workspace/AGENTS.md                你的人格文件
+  workspace/memory/                  原始记忆，不提交
+  workspace/data/                    派生索引与运行配置，不提交
+  logs/ backups/ tmp/
 ```
 
-如果你已经在别的地方装过 NapCat/AstrBot，不用重新部署：把「设置」页的根目录和各组件相对路径
-指过去即可（相对路径在 `qqbot.config.json` 的 `paths.*` 字段里改，或让它们保持绝对路径）。
+## AstrBot 与桥接
 
-## 必须手动做的两步
+固定源码来自 AstrBotDevs/AstrBot。当前固定版本使用 Python >=3.12 和 pyproject.toml；部署器通过 uv 建立独立环境并安装依赖，不再尝试已移除的 requirements.txt。源码在 tmp 暂存、检出固定提交并校验入口后才发布到目标；非空异常目录保留并提示检查。
 
-1. **安装官方 `astrbot_plugin_dsh`**：到 <https://github.com/CCYellowStar2/astrbot_plugin_dsh>
-   按它的 README 装进 AstrBot（AstrBot WebUI → 插件市场 搜索安装，或手动放进
-   `astrbot-src/data/plugins/`）。本插件的面板会读写它的配置和限额常量，但不会替你装它——
-   这是一个独立维护的第三方项目。
-2. **启用 DSH 侧的 `dsh-astrbot-ingress`**：DSH 桌面端自带，在 profile 里启用即可，面板「总览」
-   的 DSH ingress 卡片会显示它是否可用。
+然后联动补装 CCYellowStar2/astrbot_plugin_dsh。桥接有 main.py 就保留，不覆盖现有修改或配置。首次启动 AstrBot 还需要 WebUI 初始化和 OneBot 适配器；运行中补装桥接后需重载插件。
 
-## GPT-SoVITS 的额外步骤
+## NapCat
 
-一键部署只会 `git clone` 源码。接下来你还需要：
+下载固定版本 Windows OneKey ZIP 并校验 GitHub asset SHA256。不同 OneKey 版本的启动器可能在 bootmain 子目录；本版兼容根目录 / bootmain 探测。
 
-1. 按官方仓库的 `install.sh`（或一键包）装好预训练模型权重和依赖；
-2. 准备一个独立的 Python 环境（官方推荐 conda，因为依赖版本比较挑）；
-3. 在控制台「设置」页填这个环境的 `python.exe` 完整路径。
+这一步准备的是上游安装器 / 启动器，不是已经登录的 QQ 环境。没有完成首次初始化时明确显示 partial。请运行部署目录的 NapCatInstaller.exe，按官方步骤准备 QQ / 协议端，再配置 OneBot 并扫码。不会静默操作当前系统中另一个 QQ 或复制其登录态。
 
-## 验证清单
+## DSH ingress
 
-部署完成后，「总览」页的体检应该全绿；如果某一项失败，面板会给出具体提示（缺哪个可执行文件、
-哪个端口没开、风控状态等）。
+它是 **DSH 的独立插件**，不是 AstrBot 插件，也不是本控制台自带的协议服务。总览按钮先检测配置端口；缺失时通过宿主 pluginManager 请求安装固定 GitHub 提交。宿主没有该接口、已有安装未启用或需要重启时会给出指引，不伪报在线。不要在正在运行的私有 profile 上进行隔离安装测试。
+
+## GPT-SoVITS
+
+一键准备固定源码。预训练 / 自训练模型、CUDA / CPU 环境、授权参考音频体积大且因机器不同，需要按官方文档安装；因此状态为 partial。在设置页填写自己的语音 Python 路径，再应用自己的参考音频。不会附带维护者的音色。
+
+## 本地向量环境
+
+可选，见 [MEMORY.md](MEMORY.md)。使用单独 Python 3.11，与 AstrBot 的 3.12 环境分离；CPU 推理，不占显存，不需要 Hindsight 线上账号。
+
+## 升级与回退
+
+升级前备份 QQBOT_CONFIG、workspace、AstrBot 配置与桥接目录。更新公开包不更新 / 覆盖这些运行数据。回退选择 `github:ZOTTALL/dsh-xiaoyu-qqbot#v1.0.1` 并重载组件；派生向量索引可保留，旧版不会使用它。不要为回退而删除原始记忆。
+
+陌生人好友 / 群聊及 DSH 人格 / 密钥复用见 [CHAT-MODES.md](CHAT-MODES.md)。

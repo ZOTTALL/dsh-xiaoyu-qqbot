@@ -54,9 +54,9 @@ test('桌面端注入行与网页端 tapIndex', async () => {
 
 test('页面与静态资源可取', async () => {
   const b = await boot()
-  for (const [p, re] of [['/dsh-xiaoyu-qqbot/ui', /QQ BOT 控制台/], ['/dsh-xiaoyu-qqbot/console.js', /use strict/], ['/dsh-xiaoyu-qqbot/console.css', /--pri/], ['/dsh-xiaoyu-qqbot/widget.js', /dshqq-handle/]]) {
+  for (const [p, re] of [['/dsh-xiaoyu-qqbot/ui', /QQ BOT 控制台/], ['/dsh-xiaoyu-qqbot/console.js', /use strict/], ['/dsh-xiaoyu-qqbot/console.css', /--pri/], ['/dsh-xiaoyu-qqbot/widget.js', /dshpubqq-handle/]]) {
     const r = await call(b.port, p); assert.equal(r.code, 200, p); assert.match(r.text, re, p)
-    if (p.endsWith('/widget.js')) assert.doesNotMatch(r.text, /#dshqq-fab\{|dshqq-pop|window\.open\(/)
+    if (p.endsWith('/widget.js')) assert.doesNotMatch(r.text, /#dshpubqq-fab\{|dshpubqq-pop|window\.open\(/)
   }
   b.server.close()
 })

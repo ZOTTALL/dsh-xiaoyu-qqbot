@@ -40,6 +40,7 @@
     if (a) { e.preventDefault(); gotoTab(a.dataset.goto) }
   })
   function gotoTab(name) {
+    if(name==='memory'){location.href='/dsh-xiaoyu-qqbot/memory';return}
     document.querySelectorAll('#tabs button').forEach(function (x) { x.classList.toggle('on', x.dataset.tab === name) })
     document.querySelectorAll('main > section').forEach(function (s) { s.classList.toggle('on', s.id === 'tab-' + name) })
     state.tab = name; onTab(name)
@@ -58,10 +59,10 @@
 
   // ── 总览 / 服务卡片 ──
   var SVC = [
-    { key: 'astrbot', name: 'AstrBot', port: 'astrbotUi', desc: 'QQ ⇄ DSH 网关 (6185)', deployKey: 'astrbot' },
-    { key: 'napcat', name: 'NapCat', port: 'napcat', desc: 'QQ 协议端 (3002)', deployKey: 'napcat' },
-    { key: 'tts', name: 'GPT-SoVITS 语音', port: 'tts', desc: '语音合成服务 (9880)', deployKey: 'tts' },
-    { key: 'ingress', name: 'DSH ingress', port: 'ingress', desc: '桌面端接入 (3188)，由 DSH 提供', fixed: true },
+    { key: 'astrbot', name: 'AstrBot', port: 'astrbotUi', desc: 'QQ ⇄ DSH 网关', deployKey: 'astrbot' },
+    { key: 'napcat', name: 'NapCat', port: 'napcat', desc: 'QQ 协议端', deployKey: 'napcat' },
+    { key: 'tts', name: 'GPT-SoVITS 语音', port: 'tts', desc: '语音合成服务', deployKey: 'tts' },
+    { key: 'ingress', name: 'DSH ingress', port: 'ingress', desc: 'DSH 桌面端 ingress 插件', fixed: true },
   ]
   function renderCards(s) {
     var h = ''
@@ -72,7 +73,7 @@
       var cls = up ? (v.key === 'napcat' && !s.bot ? 'warn' : 'ok') : 'bad'
       h += '<div class="card"><div class="t"><span class="dot ' + cls + '"></span>' + v.name + '</div><div class="s">' + sub + '</div><div class="b">'
       if (!v.fixed) {
-        var installed = dep[v.deployKey]
+        var installed = dep[v.deployKey] === true
         if (installed === false) {
           h += '<button class="deploy" data-op="deploy" data-t="' + v.deployKey + '">一键部署</button>'
         } else {
@@ -81,6 +82,7 @@
           h += ' <button class="deploy mini" data-op="deploy" data-t="' + v.deployKey + '" title="重新检查/补装">重新部署</button>'
         }
       }
+      if(v.fixed)h+='<button class="deploy" data-op="deploy" data-t="ingress">一键部署 / 检测</button>';
       h += '</div></div>'
     })
     $('svc-cards').innerHTML = h
@@ -91,11 +93,12 @@
       }
     })
   }
-  function runDeploy(btn, target) {
+  function runDeploy(btn, target, components) {
     act(btn, function () {
       toast('开始部署 ' + target + '，进度见“日志”页')
-      return post('deploy', { target: target }).then(function (r) { return pollDeployJob(r.job.id) })
-    }, '部署流程已结束，查看日志确认结果')
+      if(!components&&!confirm('检测 / 部署 '+target+'？从固定公开上游下载，已有目录不覆盖。'))return;
+      return post('deploy', { target: target,components:components }).then(function (r) { return pollDeployJob(r.job.id) })
+    })
   }
   function pollDeployJob(id) {
     return new Promise(function (resolve, reject) {
@@ -105,12 +108,13 @@
           var job = r.job
           if (!job || job.status === 'missing') return reject(new Error('部署任务丢失'))
           if (job.status === 'running') { if (++n > 600) return reject(new Error('部署超时（10 分钟）')); return setTimeout(tick, 1000) }
-          resolve(job)
+          if(job.status==='error')return reject(new Error(job.error||'部署失败'));toast(job.status==='partial'?'源码 / 安装请求已准备，仍有手动配置步骤；见日志':'部署流程完成；需要时在 AstrBot 重载桥接插件');resolve(job)
         }).catch(reject)
       }
       tick()
     })
   }
+  $('b-deploy-all').onclick=()=>document.getElementById('deploy-dialog').showModal();$('b-deploy-cancel').onclick=()=>document.getElementById('deploy-dialog').close();$('deploy-form').onsubmit=e=>{e.preventDefault();var cs=[...document.querySelectorAll('[name=component]:checked')].map(n=>n.value);if(!cs.length)return toast('至少选择一个组件',true);document.getElementById('deploy-dialog').close();runDeploy($('b-deploy-all'),'all',cs)};$('b-deploy-bridge').onclick=()=>runDeploy($('b-deploy-bridge'),'bridge');$('b-deploy-memory').onclick=()=>runDeploy($('b-deploy-memory'),'memory');
   function renderChip(s) {
     var c = $('chip'); var online = !!s.bot
     c.className = 'chip ' + (online && s.chain === 'ok' ? 'ok' : s.login.phase === 'blocked' ? 'bad' : online ? 'warn' : 'bad')
@@ -156,9 +160,9 @@
   // ── 抽屉内也能收起（postMessage 给宿主页的挂件）──
   if (window.parent && window.parent !== window) {
     $('b-collapse').hidden = false
-    $('b-collapse').onclick = function () { try { window.parent.postMessage({ type: 'dshqq-close' }, '*') } catch (e) {} }
+    $('b-collapse').onclick = function () { try { window.parent.postMessage({ type: 'dshpubqq-close' }, '*') } catch (e) {} }
     $('b-reload').hidden = false
-    $('b-reload').onclick = function () { try { window.parent.postMessage({ type: 'dshqq-reload' }, '*') } catch (e) {} }
+    $('b-reload').onclick = function () { try { window.parent.postMessage({ type: 'dshpubqq-reload' }, '*') } catch (e) {} }
   }
 
   // ── 全局按钮 ──
@@ -398,6 +402,7 @@
   function loadSettings() {
     return get('settings').then(function (r) {
       state.settings = r
+      if(state.status)renderCards(state.status)
       $('s-root').value = r.raw.root || ''
       $('s-owner').value = r.raw.ownerQq || ''
       $('s-bot').value = r.raw.botQq || ''

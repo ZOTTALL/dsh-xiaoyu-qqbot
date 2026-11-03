@@ -1,0 +1,47 @@
+{
+  "root": "C:\\DSH-QQBOT",
+  "ownerQq": "",
+  "botQq": "",
+  "ports": {
+    "napcatHttp": 3002,
+    "napcatWebui": 6099,
+    "astrbotUi": 6185,
+    "astrbotWs": 6199,
+    "ingress": 3188,
+    "tts": 9880
+  },
+  "paths": {
+    "napcatDir": "onekey/NapCat.Shell",
+    "napcatExe": "onekey/NapCat.Shell/NapCatWinBootMain.exe",
+    "napcatVersionDir": "",
+    "astrbotDir": "astrbot-src",
+    "astrbotVenvPy": "astrbot-src/.venv/Scripts/python.exe",
+    "astrbotPluginMain": "astrbot-src/data/plugins/astrbot_plugin_dsh/main.py",
+    "astrbotPluginCfg": "astrbot-src/data/config/astrbot_plugin_dsh_config.json",
+    "addonDir": "astrbot-src/data/plugins/dsh_xiaoyu_addon",
+    "workspace": "workspace",
+    "agents": "workspace/AGENTS.md",
+    "memoryDir": "workspace/memory",
+    "stickersDir": "workspace/stickers",
+    "stickerIndex": "workspace/stickers/index.json",
+    "voiceCfg": "workspace/voice.json",
+    "voiceRefDir": "voice/ref",
+    "voiceDir": "voice/GPT-SoVITS",
+    "logsDir": "logs",
+    "backupsDir": "backups",
+    "tmpDir": "tmp"
+  },
+  "voicePy": "",
+  "watchdog": {
+    "enabled": false,
+    "intervalSec": 30,
+    "restartAstrbot": true,
+    "restartNapcat": false,
+    "maxRestartsPerHour": 3
+  },
+  "autostart": {
+    "napcat": false,
+    "astrbot": false,
+    "tts": false
+  }
+}

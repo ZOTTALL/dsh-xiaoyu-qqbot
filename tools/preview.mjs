@@ -1,16 +1,12 @@
-// 本地预览：用真实 core 数据 + 与宿主相同的路由，跑一个只读预览服务（仅用于验证 UI，不装进 DSH）。
-// 用法：node tools/preview.mjs [port]
-// 注意：无鉴权，仅限本机调试，别对公网暴露。
+// Actual plugin handler, loopback only. No bootstrap, service autostart, or writes in screenshot mode.
 import http from 'node:http'
-import { apply } from '../lib/index.js'
-
-const port = Number(process.argv[2] || 8799)
-const routes = []
-apply({
-  effect() {},
-  on() { return () => {} },
-  inject(_n, cb) { cb({ get() { return null }, webServer: { register(r) { routes.push(r); return () => {} }, tapIndex() { return () => {} } } }) },
+import {handle,closeLocalMemory} from '../lib/index.js'
+const port=Number(process.argv[2]||8799)
+const allowWrites=process.env.QQBOT_PREVIEW_WRITES==='1'
+const server=http.createServer((req,res)=>{
+  if(req.url==='/'){res.writeHead(200,{'content-type':'text/html; charset=utf-8'});res.end('<!doctype html><html lang="zh-CN"><title>QQ BOT 演示</title><a href="/dsh-xiaoyu-qqbot/ui">打开 QQ BOT 控制台</a><br><a href="/dsh-xiaoyu-qqbot/memory">打开记忆空间</a></html>');return}
+  if(!allowWrites&&req.method!=='GET'){res.writeHead(405);res.end('read-only preview');return}
+  handle(req,res,null)
 })
-http.createServer((req, res) => routes[0].handler(req, res)).listen(port, '127.0.0.1', () => {
-  console.log(`preview on http://127.0.0.1:${port}/dsh-xiaoyu-qqbot/ui`)
-})
+for(const signal of ['SIGINT','SIGTERM'])process.once(signal,async()=>{await closeLocalMemory();server.closeAllConnections();server.close(()=>process.exit(0))})
+server.listen(port,'127.0.0.1',()=>console.log('QQBOT_PREVIEW=http://127.0.0.1:'+port+'/;READ_ONLY='+!allowWrites))
