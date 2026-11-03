@@ -4,6 +4,7 @@
   var API = '/dsh-xiaoyu-qqbot/api/'
   var $ = function (id) { return document.getElementById(id) }
   var csrf = ''
+  var deployBusy = false
   var state = { status: null, settings: null, doc: null, tab: 'overview', qrTick: 0 }
 
   function toast(msg, bad) {
@@ -94,11 +95,13 @@
     })
   }
   function runDeploy(btn, target, components) {
+    if(deployBusy)return toast('已有部署任务进行中，请查看日志。重复请求会复用同一任务。');
+    if(!components&&!confirm('检查 / 部署 '+target+'？缺少 Git / uv 时自动准备便携工具，已有目录不覆盖。'))return;
+    deployBusy=true;
     act(btn, function () {
-      toast('开始部署 ' + target + '，进度见“日志”页')
-      if(!components&&!confirm('检测 / 部署 '+target+'？从固定公开上游下载，已有目录不覆盖。'))return;
+      toast('正在检查前置工具并部署 '+target+'，首次下载较久，进度见“日志”页');
       return post('deploy', { target: target,components:components }).then(function (r) { return pollDeployJob(r.job.id) })
-    })
+    }).finally(function(){deployBusy=false})
   }
   function pollDeployJob(id) {
     return new Promise(function (resolve, reject) {
@@ -107,14 +110,14 @@
         get('deploy/job', { id: id }).then(function (r) {
           var job = r.job
           if (!job || job.status === 'missing') return reject(new Error('部署任务丢失'))
-          if (job.status === 'running') { if (++n > 600) return reject(new Error('部署超时（10 分钟）')); return setTimeout(tick, 1000) }
+          if (job.status === 'running') { if (++n > 7200) return reject(new Error('面板等待结束，请在日志中确认后台任务状态')); return setTimeout(tick, 1000) }
           if(job.status==='error')return reject(new Error(job.error||'部署失败'));toast(job.status==='partial'?'源码 / 安装请求已准备，仍有手动配置步骤；见日志':'部署流程完成；需要时在 AstrBot 重载桥接插件');resolve(job)
         }).catch(reject)
       }
       tick()
     })
   }
-  $('b-deploy-all').onclick=()=>document.getElementById('deploy-dialog').showModal();$('b-deploy-cancel').onclick=()=>document.getElementById('deploy-dialog').close();$('deploy-form').onsubmit=e=>{e.preventDefault();var cs=[...document.querySelectorAll('[name=component]:checked')].map(n=>n.value);if(!cs.length)return toast('至少选择一个组件',true);document.getElementById('deploy-dialog').close();runDeploy($('b-deploy-all'),'all',cs)};$('b-deploy-bridge').onclick=()=>runDeploy($('b-deploy-bridge'),'bridge');$('b-deploy-memory').onclick=()=>runDeploy($('b-deploy-memory'),'memory');
+  $('b-deploy-all').onclick=()=>document.getElementById('deploy-dialog').showModal();$('b-deploy-cancel').onclick=()=>document.getElementById('deploy-dialog').close();$('deploy-form').onsubmit=e=>{e.preventDefault();var cs=[...document.querySelectorAll('[name=component]:checked')].map(n=>n.value);if(!cs.length)return toast('至少选择一个组件',true);document.getElementById('deploy-dialog').close();runDeploy($('b-deploy-all'),'all',cs)};$('b-deploy-tools').onclick=()=>runDeploy($('b-deploy-tools'),'tools');$('b-deploy-bridge').onclick=()=>runDeploy($('b-deploy-bridge'),'bridge');$('b-deploy-memory').onclick=()=>runDeploy($('b-deploy-memory'),'memory');
   function renderChip(s) {
     var c = $('chip'); var online = !!s.bot
     c.className = 'chip ' + (online && s.chain === 'ok' ? 'ok' : s.login.phase === 'blocked' ? 'bad' : online ? 'warn' : 'bad')

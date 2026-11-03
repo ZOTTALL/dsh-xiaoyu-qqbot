@@ -56,3 +56,10 @@ test('checkIngress 返回明确的 ok/detail 或 ok/hint 形状，不抛异常',
   if (r.ok) assert.ok('detail' in r)
   else assert.ok(typeof r.hint === 'string' && r.hint.length > 0)
 })
+
+test('已有 GPT-SoVITS 源码仍报告 partial，不把源码存在当成语音环境就绪',async()=>{
+ const root=tempRoot();fs.mkdirSync(path.join(root,'voice','GPT-SoVITS'),{recursive:true});fs.writeFileSync(path.join(root,'voice','GPT-SoVITS','api_v2.py'),'# fixture')
+ const d=await freshDeploy(),r=await d.deployTts();let j
+ do{await new Promise(resolve=>setTimeout(resolve,10));j=d.getDeployJob(r.id)}while(j.status==='running')
+ assert.equal(j.status,'partial');assert.ok(j.steps.some(s=>s.text.includes('不等于语音可用')))
+})

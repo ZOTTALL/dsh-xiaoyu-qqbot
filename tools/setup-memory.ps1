@@ -1,18 +1,21 @@
 ﻿param(
   [string]$Root=(Join-Path $env:LOCALAPPDATA 'DSH-QQBOT'),
   [string]$Workspace='',
-  [string]$Python='3.11'
+  [string]$Python='3.11',
+  [string]$Uv='uv'
 )
 $ErrorActionPreference='Stop'
+[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false)
+$OutputEncoding=[Console]::OutputEncoding
 if(!$Workspace){$Workspace=Join-Path $Root 'workspace'}
-if(!(Get-Command uv -ErrorAction SilentlyContinue)){throw '请先安装 uv（https://docs.astral.sh/uv/getting-started/installation/），然后重试；不修改系统 Python。'}
+if(!(Get-Command $Uv -ErrorAction SilentlyContinue)){throw '部署工具 uv 尚未就绪；请在控制台运行部署工具检查后重试。'}
 $runtime=Join-Path $Root 'memory-runtime'
 $envPython=Join-Path $runtime 'venv\Scripts\python.exe'
 if(!(Test-Path -LiteralPath $envPython)){
-  & uv venv --python $Python --managed-python (Join-Path $runtime 'venv')
+  & $Uv venv --python $Python --managed-python (Join-Path $runtime 'venv')
   if($LASTEXITCODE){throw '创建独立 Python 3.11 环境失败'}
 }
-& uv pip sync --python $envPython (Join-Path $PSScriptRoot 'memory-requirements.lock')
+& $Uv pip sync --system-certs --python $envPython (Join-Path $PSScriptRoot 'memory-requirements.lock')
 if($LASTEXITCODE){throw '安装固定版本依赖失败'}
 $models=@(@{manifest='memory-model.manifest.json';folder='bge-small-zh-v1.5-int8'},@{manifest='memory-reranker.manifest.json';folder='bge-reranker-base-int8'})
 foreach($spec in $models){

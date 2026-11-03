@@ -1,12 +1,21 @@
-# QQ BOT for DSH Desktop · v1.1.0
+# QQ BOT for DSH Desktop · v1.1.1
 
 一个面向 **DeepSeek Harness 桌面版**的 QQ BOT 插件。部署、登录、语音、表情包、人格文件、长期记忆、限额和日志都在同一个侧边栏内管理。包名沿用 `dsh-xiaoyu-qqbot`，界面统一显示 **QQ BOT**，不附带维护者的人格、聊天、账号、密钥或模型权重。
 
-**适配声明：DSH >= 0.2.1-rc.2，Windows。** 本次实际安装验收使用桌面版自带的 **0.2.1-rc.5** 运行时；最低声明不代表每个历史版本均已逐版测试。Node >=18；组件自动部署还需要 Git 和 [uv](https://docs.astral.sh/uv/getting-started/installation/)。
+**适配声明：DSH >= 0.2.1-rc.2，Windows。** 本次实际安装验收使用桌面版自带的 **0.2.1-rc.5** 运行时；最低声明不代表每个历史版本均已逐版测试。Node >=18；新机通过下方 TGZ 地址安装插件本体后，组件部署会自动检查 Git / uv，缺失时下载固定版本、SHA256 校验的官方便携工具到部署目录，无需预先安装这两项工具。
 
 > 许可证沿用 [Noncommercial License 1.0](LICENSE)：个人、学习、科研和非盈利用途免费；商业或公司内部使用请先联系作者。第三方组件与模型各自遵循其许可证。
 
-## 1.1.0 新功能
+## 1.1.1 修复：新电脑部署
+
+- **自动准备 Git / uv**：系统命令可用则复用，缺失则在部署目录 `.deploy-tools/` 准备官方便携版；固定版本与 SHA256，Windows x64 / ARM64 清单，不写系统 PATH、不请求管理员安装。首次下载仍需要网络和磁盘空间。
+- **部署防重入**：同一目录、同一组件的重复请求复用任务；同目录不同组件串行执行；单项部署与总部署共享任务，防止 NapCat 下载文件互相覆盖。
+- **下载完整性**：每次使用独立临时文件，支持校验分段下载、超时、流中断清理，保持 SHA256 检查，不以取消校验掩盖失败。
+- **中文日志与真实错误**：PowerShell 显式 UTF-8，按流保留跨块中文字符，显示缺失命令 / 退出码 / 网络错误，不再只显示泛化的“源码获取失败”。
+- **ingress 无系统 Git 安装**：便携 Git 拉取固定提交并生成本地安装包，经 DSH 官方插件管理器安装；DSH 自己的包管理器无需寻找系统 Git。
+- **界面提示**：新增“检查 / 准备部署工具”，修正固定 10 分钟前端超时；GPT-SoVITS 仅有源码时始终提示待配置。
+
+## 1.1.0 功能（1.1.1 保留）
 
 - **认知星海**：六个语义分区、稳定三维布局、稀疏星海背景、暖色恒星 / 蓝色行星、区域聚焦与真实来源跨区束线；支持原星图、2D、宽屏、原生全屏、Esc、Shift 平移、暂停和持续动效。分区是产品导航，不是人脑功能定位。
 - **本地混合检索**：BGE 中文向量 + SQLite FTS5 / BM25 + RRF + 按需加载的 CPU 交叉编码重排，512 维；不依赖线上 Hindsight，不占显存。原文带来源 / 行号，支持更新删除、重启持久化、范围隔离和上下文预算。
@@ -21,41 +30,43 @@
 
 以下均由**独立虚构演示工作区**产生，未连接真实 QQ 或复用维护者的数据。
 
-![总览与联动部署](docs/images/overview-v1.1.jpg)
+![总览与联动部署](docs/images/overview-v1.1.1.jpg)
 ![认知星海](docs/images/memory-v1.1.jpg)
-![部署组件选择](docs/images/deploy-v1.1.jpg)
+![部署组件选择](docs/images/deploy-v1.1.1.jpg)
 
-## 安装 / 更新到 1.1.0
+## 安装 / 更新到 1.1.1
 
 在 **DSH 桌面端的「插件」→「添加插件」**中填写：
 
 ```text
-github:ZOTTALL/dsh-xiaoyu-qqbot#v1.1.0
+https://github.com/ZOTTALL/dsh-xiaoyu-qqbot/releases/download/v1.1.1/dsh-xiaoyu-qqbot-1.1.1.tgz
 ```
+
+这是**推荐的新电脑安装入口**，下载插件包时不依赖系统 Git。如果已经安装 Git，也可填写 `github:ZOTTALL/dsh-xiaoyu-qqbot#v1.1.1`。
 
 也可使用**桌面版安装 / 管理的 `dsh` 命令**（不是另装的 npm CLI）：
 
 ```powershell
-dsh plugin --profile desktop add github:ZOTTALL/dsh-xiaoyu-qqbot#v1.1.0
+dsh plugin --profile desktop add github:ZOTTALL/dsh-xiaoyu-qqbot#v1.1.1
 ```
 
 若使用克隆目录：
 
 ```powershell
-git clone --branch v1.1.0 https://github.com/ZOTTALL/dsh-xiaoyu-qqbot.git
+git clone --branch v1.1.1 https://github.com/ZOTTALL/dsh-xiaoyu-qqbot.git
 dsh plugin --profile desktop add link:C:/path/to/dsh-xiaoyu-qqbot
 ```
 
 在桌面端重载组件并刷新页面。首次打开「设置」，填写自己的部署根目录、主人 / 机器人 QQ；再在「总览」选择部署组件。**默认不自启服务、不开放陌生人的工具权限。**
 
-已有 1.0.1 用户：先备份 `qqbot.config.json`、整个工作区和 AstrBot 配置。推荐把真实配置放在仓库外，以 `QQBOT_CONFIG` 指向它，再更新依赖。不要拿示例配置覆盖已有配置。回退可重新选择 `#v1.0.1`；先停用新版组件再重载，原始记忆与派生索引均不因回退而删除。
+已有 1.0.1 / 1.1.0 用户：先备份 `qqbot.config.json`、整个工作区和 AstrBot 配置。推荐把真实配置放在仓库外，以 `QQBOT_CONFIG` 指向它，再更新依赖。不要拿示例配置覆盖已有配置。回退可选择旧版 tag 或旧版 TGZ（1.1.0 / 1.0.1）；先停用新版组件再重载，原始记忆与派生索引均不因回退而删除。
 
 ## 前置桥接：两个插件，分别安装
 
 | 组件 | 安装位置 | 本项目怎样处理 |
 |---|---|---|
 | [`astrbot_plugin_dsh`](https://github.com/CCYellowStar2/astrbot_plugin_dsh) | **AstrBot** 的 `data/plugins/astrbot_plugin_dsh` | 部署 AstrBot 时联动补装；也可点「检测 / 补装 DSH 桥接」 |
-| [`dsh-astrbot-ingress`](https://github.com/CCYellowStar2/dsh-astrbot-ingress) | **DSH 桌面端**的插件列表 | 检测在线状态；缺失时经宿主 pluginManager 安装；宿主要求重启时显示待完成 |
+| [`dsh-astrbot-ingress`](https://github.com/CCYellowStar2/dsh-astrbot-ingress) | **DSH 桌面端**的插件列表 | 检测在线状态；缺失时准备固定源码的本地包，再经宿主 pluginManager 安装；宿主要求重启时显示待完成 |
 
 **不要把 AstrBot 插件填进 DSH 插件列表。** 两端都加载后才形成 `QQ → NapCat → AstrBot → DSH ingress → DSH`。同机桥接可按上游机制发现 ingress 信标；容器部署、端口映射、token 和权限仍需按上游说明配置。安装来源 / 固定提交见 [tools/upstreams.json](tools/upstreams.json)。
 
@@ -76,7 +87,7 @@ dsh plugin --profile desktop add link:C:/path/to/dsh-xiaoyu-qqbot
 | NapCat | 校验 SHA256 的 Windows OneKey 启动器 | 首次由启动器准备 QQ / 协议环境并扫码；OneBot 地址与访问凭据 |
 | DSH ingress | 已在线则跳过；可用宿主中联动安装固定提交 | 按宿主要求启用 / 重启；自定义端口 / 容器 token |
 | GPT-SoVITS | 固定源码准备 | 官方环境 / 权重 / 授权参考音频；本项目明确标记为 `partial` |
-| 本地向量环境 | 独立 Python 3.11、固定依赖与哈希校验模型、CPU 推理配置 | 安装 uv；首次下载约 320MB 模型文件，预留内存；无需模型 API key |
+| 本地向量环境 | 独立 Python 3.11、固定依赖与哈希校验模型、CPU 推理配置 | 自动准备 uv；首次下载约 320MB 模型文件，预留内存；无需模型 API key |
 
 ## 与现有组件不冲突的测试方法
 
@@ -104,7 +115,7 @@ node tools/create-demo.mjs C:/path/to/empty-demo
 node tools/preview.mjs 8799
 ```
 
-真实语义集成测试需要额外提供 `QQBOT_MEMORY_PYTHON`、`QQBOT_MEMORY_MODEL`、`QQBOT_MEMORY_RERANKER`，再运行 `npm run test:semantic`；未配置时明确跳过，不把文本检索冒充向量测试。完整原理、资源与边界见 [MEMORY.md](docs/MEMORY.md)。本次实测记录见 [VALIDATION.md](docs/VALIDATION.md)。问题报告不要附真实配置 / 聊天 / 密钥，见 [SECURITY](SECURITY.md)。
+真实语义集成测试需要额外提供 `QQBOT_MEMORY_PYTHON`、`QQBOT_MEMORY_MODEL`、`QQBOT_MEMORY_RERANKER`，再运行 `npm run test:semantic`；未配置时明确跳过，不把文本检索冒充向量测试。完整原理、资源与边界见 [MEMORY.md](docs/MEMORY.md)。本次实测记录见 [1.1.1 验证记录](docs/VALIDATION-1.1.1.md)。问题报告不要附真实配置 / 聊天 / 密钥，见 [SECURITY](SECURITY.md)。
 
 ## 致谢
 

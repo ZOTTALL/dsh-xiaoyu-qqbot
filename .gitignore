@@ -39,3 +39,4 @@ __pycache__/
 *.db-*
 .venv/
 .privacy-forbidden.local.json
+/.deploy-tools/

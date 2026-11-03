@@ -2,9 +2,9 @@
 
 ## 前提
 
-DSH 桌面版 >=0.2.1-rc.2；本次实测为桌面自带运行时 0.2.1-rc.5。安装 Git 和 uv。所有真实配置、依赖、日志、人格、记忆与模型保留在你自己的数据目录，不提交到插件仓库。
+DSH 桌面版 >=0.2.1-rc.2；本次实测为桌面自带运行时 0.2.1-rc.5。缺少 Git / uv 时，插件自动下载固定版本并校验 SHA256，准备在部署根目录 `.deploy-tools/` 下；不修改系统 PATH 或全局 Python。所有真实配置、依赖、日志、人格、记忆与模型保留在你自己的数据目录，不提交到插件仓库。
 
-1. 在 DSH 插件页添加 `github:ZOTTALL/dsh-xiaoyu-qqbot#v1.1.0`，重载组件并刷新页面。
+1. 在 DSH 插件页添加 `https://github.com/ZOTTALL/dsh-xiaoyu-qqbot/releases/download/v1.1.1/dsh-xiaoyu-qqbot-1.1.1.tgz`，重载组件并刷新页面。
 2. 在插件「设置」填写部署根目录和 QQ 号。已有配置不要被示例覆盖；推荐使用仓库外 QQBOT_CONFIG。
 3. 在「总览」点「一键部署配套环境」，选择组件。安装器不会自动登录 QQ、批准好友或开放陌生人权限。
 4. 配置完 OneBot / 模型 / 权限后再启动服务，并按 [BRIDGE.md](BRIDGE.md) 验证两端桥接。
@@ -13,6 +13,7 @@ DSH 桌面版 >=0.2.1-rc.2；本次实测为桌面自带运行时 0.2.1-rc.5。�
 
 ```text
 <部署根目录>/
+  .deploy-tools/                    便携 Git / uv、托管 Python 与缓存（不分发）
   astrbot-src/                       AstrBot 固定源码 + .venv
     data/plugins/astrbot_plugin_dsh/ 官方桥接（联动安装，已有目录不覆盖）
   onekey/NapCat.Shell/               NapCat OneKey 安装器及 bootmain
@@ -53,3 +54,13 @@ DSH 桌面版 >=0.2.1-rc.2；本次实测为桌面自带运行时 0.2.1-rc.5。�
 升级前备份 QQBOT_CONFIG、workspace、AstrBot 配置与桥接目录。更新公开包不更新 / 覆盖这些运行数据。回退选择 `github:ZOTTALL/dsh-xiaoyu-qqbot#v1.0.1` 并重载组件；派生向量索引可保留，旧版不会使用它。不要为回退而删除原始记忆。
 
 陌生人好友 / 群聊及 DSH 人格 / 密钥复用见 [CHAT-MODES.md](CHAT-MODES.md)。
+
+## 1.1.1：从 1.1.0 故障恢复
+
+更新插件并重载后，保留已有部署根目录和配置，先点“检查 / 准备部署工具”，或直接重新部署目标组件。失败的源码暂存目录与用户文件均保留，不需要清空整个目录。新任务使用独立下载临时文件，旧的下载残片不参与校验。
+
+组件在同一根目录下排队，同组件重复请求返回同一个正在运行的任务；不同浏览器标签也受后端保护。首次依赖下载可能较久，请看任务日志，不要用反复点击来催动。下载网络失败仍会报告错误，不会取消证书或 SHA256 校验。
+
+NapCat 的 `partial` 明确表示启动器已准备、首次初始化待完成；GPT-SoVITS 的 `partial` 表示源码已准备、环境 / 模型待补齐。账号登录、好友 / 群权限、模型密钥仍由使用者配置，不是自动安装工具的内容。
+
+直接单独运行 setup-memory.ps1 时可传 `-Uv C:/path/to/uv.exe`；正常通过控制台部署则会自动准备并传入便携 uv。

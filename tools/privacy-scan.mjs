@@ -8,7 +8,7 @@ const candidates=execFileSync('git',['-C',root,'ls-files','--cached','--others',
 const findings=[]
 for(const name of new Set(candidates)){
   const file=path.join(root,name);if(!fs.existsSync(file)||!fs.statSync(file).isFile())continue
-  if(/(?:^|\/)(?:\.env(?:\..*)?|\.credentials[^/]*|node_modules|\.venv|workspace|memory-runtime)(?:\/|$)|\.(?:db|sqlite3?|wal|shm|pem|key|wav|mp3|pth|ckpt)$/i.test(name))findings.push({file:name,rule:'runtime-or-secret-file'})
+  if(/(?:^|\/)(?:\.env(?:\..*)?|\.credentials[^/]*|node_modules|\.venv|workspace|memory-runtime|\.deploy-tools)(?:\/|$)|\.(?:db|sqlite3?|wal|shm|pem|key|wav|mp3|pth|ckpt)$/i.test(name))findings.push({file:name,rule:'runtime-or-secret-file'})
   if(/\.(?:png|jpg|jpeg|gif|webp|ico|woff2?)$/i.test(name))continue
   const text=fs.readFileSync(file,'utf8')
   for(const value of forbidden)if(value&&text.toLowerCase().includes(String(value).toLowerCase()))findings.push({file:name,rule:'local-forbidden-marker'})
