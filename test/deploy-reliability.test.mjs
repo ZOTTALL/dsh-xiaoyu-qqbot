@@ -60,6 +60,15 @@ test('PowerShell: complete setup script parses in Windows PowerShell 5.1',async(
  const r=await streamCommand(ps,powershellArgs(`$tokens=$null; $errors=$null; [System.Management.Automation.Language.Parser]::ParseFile(${quotePS(file)},[ref]$tokens,[ref]$errors) | Out-Null; if($errors.Count){throw $errors[0]}; Write-Output 'SETUP_SCRIPT_PARSE=PASS'`))
  assert.equal(r.ok,true,r.tail);assert.match(r.tail,/SETUP_SCRIPT_PARSE=PASS/)
 })
+test('PowerShell: clean PATH and foreign PSModulePath still find native hash/JSON cmdlets',async t=>{
+ if(process.platform!=='win32')return
+ const root=temp(t),file=path.join(root,'fixture.txt');fs.writeFileSync(file,'fixture')
+ const env={...process.env};for(const k of Object.keys(env))if(k.toLowerCase()==='path')delete env[k]
+ env.PATH=process.env.SystemRoot+'\\System32';env.PSModulePath=path.join(root,'empty-modules')
+ const ps=path.join(process.env.SystemRoot,'System32','WindowsPowerShell','v1.0','powershell.exe')
+ const r=await streamCommand(ps,powershellArgs(`@{hash=(Get-FileHash -LiteralPath ${quotePS(file)} -Algorithm SHA256).Hash.ToLower()} | ConvertTo-Json -Compress`),{env})
+ assert.equal(r.ok,true,r.tail);assert.equal(JSON.parse(r.tail).hash,digest('fixture'))
+})
 test('PowerShell: explicit UTF-8 output survives a real Windows PowerShell 5.1 child',async()=>{
  if(process.platform!=='win32')return
  const lines=[],ps=path.join(process.env.SystemRoot,'System32','WindowsPowerShell','v1.0','powershell.exe')

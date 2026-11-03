@@ -7,6 +7,7 @@
 $ErrorActionPreference='Stop'
 [Console]::OutputEncoding=[Text.UTF8Encoding]::new($false)
 $OutputEncoding=[Console]::OutputEncoding
+$env:PSModulePath=(Join-Path $PSHOME 'Modules')+';'+$env:PSModulePath
 if(!$Workspace){$Workspace=Join-Path $Root 'workspace'}
 if(!(Get-Command $Uv -ErrorAction SilentlyContinue)){throw '部署工具 uv 尚未就绪；请在控制台运行部署工具检查后重试。'}
 $runtime=Join-Path $Root 'memory-runtime'
