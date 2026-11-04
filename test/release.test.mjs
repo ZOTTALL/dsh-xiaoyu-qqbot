@@ -5,7 +5,7 @@ import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 const root=fileURLToPath(new URL('..',import.meta.url)),read=name=>fs.readFileSync(path.join(root,name),'utf8')
 test('release: minor version, real DSH engine range and desktop bundle are declared',()=>{
- const pkg=JSON.parse(read('package.json'));assert.equal(pkg.version,'1.1.1');assert.equal(pkg.engines.dsh,'>=0.2.1-rc.2');assert.equal(pkg.dsh.platform,'win32');assert.ok(fs.existsSync(path.join(root,pkg.dsh.bundle.patch)));assert.equal(pkg.name,'dsh-xiaoyu-qqbot')
+ const pkg=JSON.parse(read('package.json'));assert.equal(pkg.version,'1.1.2');assert.equal(pkg.engines.dsh,'>=0.2.1-rc.2');assert.equal(pkg.dsh.platform,'win32');assert.ok(fs.existsSync(path.join(root,pkg.dsh.bundle.patch)));assert.equal(pkg.name,'dsh-xiaoyu-qqbot')
 })
 test('release: example configuration has no identities or automatic service startup',()=>{
  const c=JSON.parse(read('qqbot.config.example.json'));assert.equal(c.ownerQq,'');assert.equal(c.botQq,'');assert.ok(Object.values(c.autostart).every(x=>x===false));assert.equal(c.watchdog.enabled,false)

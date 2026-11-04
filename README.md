@@ -1,10 +1,20 @@
-# QQ BOT for DSH Desktop · v1.1.1
+# QQ BOT for DSH Desktop · v1.1.2
 
 一个面向 **DeepSeek Harness 桌面版**的 QQ BOT 插件。部署、登录、语音、表情包、人格文件、长期记忆、限额和日志都在同一个侧边栏内管理。包名沿用 `dsh-xiaoyu-qqbot`，界面统一显示 **QQ BOT**，不附带维护者的人格、聊天、账号、密钥或模型权重。
 
-**适配声明：DSH >= 0.2.1-rc.2，Windows。** 本次实际安装验收使用桌面版自带的 **0.2.1-rc.5** 运行时；最低声明不代表每个历史版本均已逐版测试。Node >=18；新机通过下方 TGZ 地址安装插件本体后，组件部署会自动检查 Git / uv，缺失时下载固定版本、SHA256 校验的官方便携工具到部署目录，无需预先安装这两项工具。
+**适配声明：DSH >= 0.2.1-rc.2，Windows。** 本次实际安装验收使用桌面版自带的 **0.2.1-rc.5** 运行时；最低声明不代表每个历史版本均已逐版测试。Node >=18；新机通过下方 TGZ 地址安装插件本体后，组件部署会自动检查 Git / uv，缺失时下载固定版本、SHA256 校验的便携工具到部署目录（国内镜像优先，失败再试官方源），无需预先安装这两项工具。
 
 > 许可证沿用 [Noncommercial License 1.0](LICENSE)：个人、学习、科研和非盈利用途免费；商业或公司内部使用请先联系作者。第三方组件与模型各自遵循其许可证。
+
+## 1.1.2 更新：国内镜像优先，官方源回退
+
+- **统一下载策略**：公开源码、Git / uv、固定 Python、NapCat、向量 / 重排模型、Python 和 npm 依赖都优先使用国内镜像 / 国内可用加速源；失败或校验不符再尝试下一来源，官方源排在最后。
+- **不牺牲完整性**：原有固定提交、模型 revision、SHA256 均保留；镜像缺货、超时、错误页面或错误提交都不会被当成安装成功。已验证缓存优先复用。
+- **新机安装入口**：提供不依赖 Git 的镜像 TGZ，以及带固定包哈希的 `install.ps1`，自动完成镜像→官方回退和桌面 profile 安装。
+- **更透明**：总览新增“查看下载源 / 回退”，部署日志记录尝试与切换。仅为下载子进程设置源，不写全局 Git、pip、npm 配置，不向镜像发送聊天或 API 密钥。
+- **Python 安装可控**：先校验固定 Python 压缩包，再让 uv 从本地包安装；旧版系统 uv 自动改用固定便携版。记忆部署直接使用 DSH 自带 Node 运行，不要求新机另装全局 Node。
+
+完整资源覆盖、来源与外部安装器边界见 [下载源与回退](docs/MIRRORS.md)。实测见 [1.1.2 验证记录](docs/VALIDATION-1.1.2.md)。
 
 ## 1.1.1 修复：新电脑部署
 
@@ -15,7 +25,7 @@
 - **ingress 无系统 Git 安装**：便携 Git 拉取固定提交并生成本地安装包，经 DSH 官方插件管理器安装；DSH 自己的包管理器无需寻找系统 Git。
 - **界面提示**：新增“检查 / 准备部署工具”，修正固定 10 分钟前端超时；GPT-SoVITS 仅有源码时始终提示待配置。
 
-## 1.1.0 功能（1.1.1 保留）
+## 1.1.0 功能（1.1.2 保留）
 
 - **认知星海**：六个语义分区、稳定三维布局、稀疏星海背景、暖色恒星 / 蓝色行星、区域聚焦与真实来源跨区束线；支持原星图、2D、宽屏、原生全屏、Esc、Shift 平移、暂停和持续动效。分区是产品导航，不是人脑功能定位。
 - **本地混合检索**：BGE 中文向量 + SQLite FTS5 / BM25 + RRF + 按需加载的 CPU 交叉编码重排，512 维；不依赖线上 Hindsight，不占显存。原文带来源 / 行号，支持更新删除、重启持久化、范围隔离和上下文预算。
@@ -30,36 +40,42 @@
 
 以下均由**独立虚构演示工作区**产生，未连接真实 QQ 或复用维护者的数据。
 
+![下载源与自动回退](docs/images/download-sources-v1.1.2.png)
 ![总览与联动部署](docs/images/overview-v1.1.1.jpg)
 ![认知星海](docs/images/memory-v1.1.jpg)
 ![部署组件选择](docs/images/deploy-v1.1.1.jpg)
 
-## 安装 / 更新到 1.1.1
+## 安装 / 更新到 1.1.2
 
-在 **DSH 桌面端的「插件」→「添加插件」**中填写：
+### 推荐：桌面插件页，免 Git
+
+在 **DSH 桌面端的「插件」→「添加插件」**填写国内可用加速地址：
 
 ```text
-https://github.com/ZOTTALL/dsh-xiaoyu-qqbot/releases/download/v1.1.1/dsh-xiaoyu-qqbot-1.1.1.tgz
+https://gh-proxy.com/https://github.com/ZOTTALL/dsh-xiaoyu-qqbot/releases/download/v1.1.2/dsh-xiaoyu-qqbot-1.1.2.tgz
 ```
 
-这是**推荐的新电脑安装入口**，下载插件包时不依赖系统 Git。如果已经安装 Git，也可填写 `github:ZOTTALL/dsh-xiaoyu-qqbot#v1.1.1`。
+如果这条地址失败，改用官方地址（桌面添加框的一次 URL 安装不会自动换 URL）：
 
-也可使用**桌面版安装 / 管理的 `dsh` 命令**（不是另装的 npm CLI）：
+```text
+https://github.com/ZOTTALL/dsh-xiaoyu-qqbot/releases/download/v1.1.2/dsh-xiaoyu-qqbot-1.1.2.tgz
+```
+
+### 自动回退安装脚本
+
+从 [v1.1.2 发布页](https://github.com/ZOTTALL/dsh-xiaoyu-qqbot/releases/tag/v1.1.2) 下载 `install.ps1`，在其目录运行：
 
 ```powershell
-dsh plugin --profile desktop add github:ZOTTALL/dsh-xiaoyu-qqbot#v1.1.1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Profile desktop
 ```
 
-若使用克隆目录：
+脚本优先加速源下载 TGZ，失败再用官方源；两者使用同一个固定 SHA256。包源按 npmmirror→npm 官方依次尝试，使用桌面版自带的 `dsh.cmd`，不另装 npm CLI、不修改全局源。可用 `-Dsh C:/path/to/desktop/resources/runtime/cli/bin/dsh.cmd` 指定桌面命令；`-DownloadOnly` 仅下载校验。默认包缓存位于 `%LOCALAPPDATA%/DSH-QQBOT/installer-cache/1.1.2`，请保留该缓存作为本地依赖来源。脚本会在本机备份所选 profile 旧包里的 `qqbot.config.json`，并仅在新包配置缺失时还原；其他工作区 / AstrBot 配置仍应自行备份。
 
-```powershell
-git clone --branch v1.1.1 https://github.com/ZOTTALL/dsh-xiaoyu-qqbot.git
-dsh plugin --profile desktop add link:C:/path/to/dsh-xiaoyu-qqbot
-```
+有 Git 的开发者仍可用 `github:ZOTTALL/dsh-xiaoyu-qqbot#v1.1.2`，但该路径要求 Git 并遵循宿主的下载行为，不是大陆新机的首选。源码联调请用独立 profile，不要在正式 profile 中链接开发目录。
 
-在桌面端重载组件并刷新页面。首次打开「设置」，填写自己的部署根目录、主人 / 机器人 QQ；再在「总览」选择部署组件。**默认不自启服务、不开放陌生人的工具权限。**
+重载组件并刷新页面。首次打开「设置」，填写自己的部署根目录、主人 / 机器人 QQ；再在「总览」选择部署组件。**默认不自启服务、不开放陌生人的工具权限。**
 
-已有 1.0.1 / 1.1.0 用户：先备份 `qqbot.config.json`、整个工作区和 AstrBot 配置。推荐把真实配置放在仓库外，以 `QQBOT_CONFIG` 指向它，再更新依赖。不要拿示例配置覆盖已有配置。回退可选择旧版 tag 或旧版 TGZ（1.1.0 / 1.0.1）；先停用新版组件再重载，原始记忆与派生索引均不因回退而删除。
+已有用户：先备份 `qqbot.config.json`、工作区和 AstrBot 配置。推荐把真实配置放在仓库外，以 `QQBOT_CONFIG` 指向它，再更新依赖；不要用示例覆盖真实配置。回退时先停用新版，使用 [v1.1.1 发布包](https://github.com/ZOTTALL/dsh-xiaoyu-qqbot/releases/tag/v1.1.1) 重装并重载。原始记忆与派生索引不因回退而删除。
 
 ## 前置桥接：两个插件，分别安装
 
@@ -115,7 +131,7 @@ node tools/create-demo.mjs C:/path/to/empty-demo
 node tools/preview.mjs 8799
 ```
 
-真实语义集成测试需要额外提供 `QQBOT_MEMORY_PYTHON`、`QQBOT_MEMORY_MODEL`、`QQBOT_MEMORY_RERANKER`，再运行 `npm run test:semantic`；未配置时明确跳过，不把文本检索冒充向量测试。完整原理、资源与边界见 [MEMORY.md](docs/MEMORY.md)。本次实测记录见 [1.1.1 验证记录](docs/VALIDATION-1.1.1.md)。问题报告不要附真实配置 / 聊天 / 密钥，见 [SECURITY](SECURITY.md)。
+真实语义集成测试需要额外提供 `QQBOT_MEMORY_PYTHON`、`QQBOT_MEMORY_MODEL`、`QQBOT_MEMORY_RERANKER`，再运行 `npm run test:semantic`；未配置时明确跳过，不把文本检索冒充向量测试。完整原理、资源与边界见 [MEMORY.md](docs/MEMORY.md)。本次实测记录见 [1.1.2 验证记录](docs/VALIDATION-1.1.2.md)。问题报告不要附真实配置 / 聊天 / 密钥，见 [SECURITY](SECURITY.md)。
 
 ## 致谢
 

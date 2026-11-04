@@ -78,3 +78,4 @@ code{background:var(--bg);padding:0 4px;border-radius:4px}
 hr{border:0;border-top:1px solid var(--line);margin:8px 0}
 
 dialog{max-width:min(620px,90vw);border:1px solid #64748b;border-radius:12px;padding:25px;background:var(--bg,#fff);color:var(--text,#1e293b)}dialog::backdrop{background:#0008}dialog .sw{display:block;margin:14px 0}
+#download-sources-dialog{width:760px;max-width:92vw}#download-sources-list code{white-space:normal;word-break:break-all;font-size:12px}#download-sources-list p{line-height:1.65}

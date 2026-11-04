@@ -34,7 +34,7 @@
     <div id="setup-banner" class="banner warn" hidden>
       还没有完成基础设置。先去 <a href="#" data-goto="settings">「设置」</a> 填部署根目录、主人 QQ 号与机器人 QQ 号。
     </div>
-    <div class="panel"><h3>配套环境</h3><p class="muted small">缺少 Git / uv 时自动准备经 SHA256 校验的便携工具，不改系统 PATH。AstrBot 部署会联动安装官方 DSH 桥。已有目录与配置保留；下载完成不等于已完成账号、权限或模型配置。</p><div class="inline wrap"><button id="b-deploy-all" class="deploy">一键部署配套环境</button><button id="b-deploy-tools" class="mini">检查 / 准备部署工具</button><button id="b-deploy-bridge" class="mini">检测 / 补装 DSH 桥接</button><button id="b-deploy-memory" class="mini">部署本地向量环境（可选）</button></div></div><div class="cards" id="svc-cards"></div>
+    <div class="panel"><h3>配套环境</h3><p class="muted small">下载默认国内镜像优先，失败自动切换官方源；固定提交 / SHA256 校验保留。缺少 Git / uv 时自动准备便携工具，不改系统 PATH。AstrBot 部署会联动安装官方 DSH 桥。已有目录与配置保留；下载完成不等于已完成账号、权限或模型配置。</p><div class="inline wrap"><button id="b-deploy-all" class="deploy">一键部署配套环境</button><button id="b-download-sources" class="mini">查看下载源 / 回退</button><button id="b-deploy-tools" class="mini">检查 / 准备部署工具</button><button id="b-deploy-bridge" class="mini">检测 / 补装 DSH 桥接</button><button id="b-deploy-memory" class="mini">部署本地向量环境（可选）</button></div></div><div class="cards" id="svc-cards"></div>
     <div class="row">
       <div class="panel grow">
         <h3>体检 <button id="b-diag" class="mini">重新检查</button></h3>
@@ -64,6 +64,7 @@
     </div>
   </section>
 
+<dialog id="download-sources-dialog"><h2>下载源与自动回退</h2><p>先校验本地缓存，再依次尝试国内镜像 / 加速源，最后尝试官方源。版本、提交和哈希保持固定。</p><div id="download-sources-list"></div><p class="muted small">NapCat 直接从 GitHub 加速源开始，中科大仅适用于其收录的 Git / uv / Python 包。镜像不代理聊天、模型 API 或账户密钥；同步延迟 / 重定向与实际来源见部署日志。</p><button id="b-download-sources-close">关闭</button></dialog>
 <dialog id="deploy-dialog"><form id="deploy-form"><h2>选择部署组件</h2><p>自动检查 Git / uv，缺失时下载便携工具到部署目录；组件按顺序部署，请勿重复点击。已有工作区、账号和密钥保留。</p><label class="sw"><input type="checkbox" name="component" value="astrbot" checked> AstrBot + 官方 DSH 桥接</label><label class="sw"><input type="checkbox" name="component" value="napcat" checked> NapCat</label><label class="sw"><input type="checkbox" name="component" value="tts"> GPT-SoVITS 源码（环境 / 权重需按官方说明补齐）</label><label class="sw"><input type="checkbox" name="component" value="ingress" checked> DSH ingress 检测 / 联动安装</label><label class="sw"><input type="checkbox" name="component" value="memory"> 本地向量 + 重排环境（CPU，可选）</label><div class="inline"><button type="button" id="b-deploy-cancel">取消</button><button class="primary">开始部署所选组件</button></div></form></dialog>
   <!-- 登录 -->
   <section id="tab-login">

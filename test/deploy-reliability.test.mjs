@@ -44,6 +44,7 @@ test('UTF-8 logs: multibyte characters split into single bytes survive intact',(
 test('process logs: stdout/stderr drain before completion and retain failure details',async()=>{
  const lines=[],r=await streamCommand(process.execPath,['-e',"process.stdout.write('部署工具正常\\n');process.stderr.write('下载连接失败');process.exitCode=7"],{step:s=>lines.push(s)})
  assert.equal(r.code,7);assert.ok(lines.includes('部署工具正常'));assert.match(commandError('tool',r),/下载连接失败/)
+ assert.match(r.stdout,/部署工具正常/);assert.doesNotMatch(r.stdout,/下载连接失败/);assert.match(r.stderr,/下载连接失败/)
 })
 test('process logs: ENOENT is retained instead of generic source failure',async()=>{
  const r=await streamCommand('qqbot-tool-not-installed-xyz',[]);assert.equal(r.code,'ENOENT');assert.match(commandError('git',r),/找不到部署工具 git/)
@@ -118,7 +119,7 @@ test('download: inconsistent HTTP range is rejected before publication',async t=
 })
 test('tools: existing system tools are reused without download or process PATH mutation',async t=>{
  const root=temp(t),before={...process.env},env={PATH:'fixture',SystemRoot:'C:\\Windows'}
- const r=await ensureTools({root,env,run:async file=>({ok:true,stdout:file+' fixture version'}),download:()=>{throw new Error('unexpected network')}})
+ const r=await ensureTools({root,env,run:async file=>({ok:true,stdout:file==='uv'?'uv 0.13.7':file+' fixture version'}),download:()=>{throw new Error('unexpected network')}})
  assert.deepEqual(r.tools,{git:'git',uv:'uv'});assert.equal(r.env.PATH,'fixture');assert.ok(Object.keys(before).length===Object.keys(process.env).length&&Object.keys(before).every(k=>before[k]===process.env[k]),'process environment mutated');assert.equal(env.UV_CACHE_DIR,undefined)
 })
 function fakeRun(file,args){
@@ -149,4 +150,12 @@ test('tools: failed verified download never publishes an incomplete tool',async 
 test('tools: symlinked tool root is rejected before extraction',async t=>{
  const root=temp(t),elsewhere=temp(t);fs.symlinkSync(elsewhere,path.join(root,'.deploy-tools'),process.platform==='win32'?'junction':'dir')
  await assert.rejects(ensureTools({root,names:['uv'],env:{PATH:''},platform:'win32',arch:'x64',run:fakeRun}),/符号链接/)
+})
+
+test('process timeout: idle child exits before fallback and stdout/stderr remain separate',async()=>{
+ const r=await streamCommand(process.execPath,['-e',"console.log('out');console.error('err');setInterval(()=>{},1000)"],{idleTimeout:250,timeout:5000});assert.equal(r.ok,false);assert.equal(r.code,'ETIMEDOUT');assert.match(r.error,/长时间无输出/);assert.equal(r.stdout,'out\n');assert.equal(r.stderr,'err\n')
+})
+
+test('tools: old system uv falls back to private pinned tool without changing the system',async t=>{
+ let downloads=0;const r=await ensureTools({root:temp(t),names:['uv'],env:{PATH:''},platform:'win32',arch:'x64',run:async(file,args)=>file==='uv'?{ok:true,stdout:'uv 0.5.0'}:fakeRun(file,args),download:async()=>{downloads++}});assert.equal(downloads,1);assert.ok(r.tools.uv.endsWith('uv.exe'))
 })

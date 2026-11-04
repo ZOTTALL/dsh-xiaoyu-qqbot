@@ -1,0 +1,77 @@
+{
+  "source": "https://github.com/astral-sh/uv/blob/0.13.7/crates/uv-python-managed/download-metadata.json",
+  "versions": {
+    "3.11": "3.11.16",
+    "3.12": "3.12.14"
+  },
+  "metadata": {
+    "cpython-3.12.14-windows-aarch64-none": {
+      "name": "cpython",
+      "arch": {
+        "family": "aarch64",
+        "variant": null
+      },
+      "os": "windows",
+      "libc": "none",
+      "major": 3,
+      "minor": 12,
+      "patch": 14,
+      "prerelease": "",
+      "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260929/cpython-3.12.14%2B20260929-aarch64-pc-windows-msvc-install_only_stripped.tar.gz",
+      "sha256": "0569fbe45713c68b034e3c1a1372f5cbb802927d3037395fb3cc94e46401704d",
+      "variant": null,
+      "build": "20260929"
+    },
+    "cpython-3.12.14-windows-x86_64-none": {
+      "name": "cpython",
+      "arch": {
+        "family": "x86_64",
+        "variant": null
+      },
+      "os": "windows",
+      "libc": "none",
+      "major": 3,
+      "minor": 12,
+      "patch": 14,
+      "prerelease": "",
+      "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260929/cpython-3.12.14%2B20260929-x86_64-pc-windows-msvc-install_only_stripped.tar.gz",
+      "sha256": "f38e68f4d612ade6dd50c894fc80b14c0be0c3b5201145d6fff5f20b9323204d",
+      "variant": null,
+      "build": "20260929"
+    },
+    "cpython-3.11.16-windows-aarch64-none": {
+      "name": "cpython",
+      "arch": {
+        "family": "aarch64",
+        "variant": null
+      },
+      "os": "windows",
+      "libc": "none",
+      "major": 3,
+      "minor": 11,
+      "patch": 16,
+      "prerelease": "",
+      "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260929/cpython-3.11.16%2B20260929-aarch64-pc-windows-msvc-install_only_stripped.tar.gz",
+      "sha256": "e4982608d51d59815c6b19b6ef5e2368f9cf7413414130d8e0ea9675025c6704",
+      "variant": null,
+      "build": "20260929"
+    },
+    "cpython-3.11.16-windows-x86_64-none": {
+      "name": "cpython",
+      "arch": {
+        "family": "x86_64",
+        "variant": null
+      },
+      "os": "windows",
+      "libc": "none",
+      "major": 3,
+      "minor": 11,
+      "patch": 16,
+      "prerelease": "",
+      "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260929/cpython-3.11.16%2B20260929-x86_64-pc-windows-msvc-install_only_stripped.tar.gz",
+      "sha256": "7b0e380ea5690cef71edbaa282e585ec08ffbece7ea8155546939adeb3377e44",
+      "variant": null,
+      "build": "20260929"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "dsh-xiaoyu-qqbot",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "QQ BOT control console for DeepSeek Harness (DSH): one-click deploy/start/stop for NapCat + AstrBot + GPT-SoVITS, live login QR, voice, stickers, persona editor, rate limits and logs — all inside one DSH desktop panel.",
   "keywords": [
     "dsh",
@@ -32,7 +32,7 @@
     "SECURITY.md"
   ],
   "scripts": {
-    "check": "node --check lib/index.js && node --check lib/core.mjs && node --check lib/config.mjs && node --check lib/deploy.mjs && node --check lib/voice-refs.mjs && node --check assets/console.js && node --check assets/widget.js && node --check lib/memory.mjs && node --check lib/memory-semantic.mjs && node --check assets/memory.js && node --check assets/memory-3d.js && node --check assets/memory-brain.js && node --check assets/memory-fullscreen.js && node --check assets/memory-layout.js && node --check lib/bridge-install.mjs && node --check lib/deploy-utils.mjs && node --check lib/deploy-tools.mjs",
+    "check": "node --check lib/index.js && node --check lib/core.mjs && node --check lib/config.mjs && node --check lib/deploy.mjs && node --check lib/voice-refs.mjs && node --check assets/console.js && node --check assets/widget.js && node --check lib/memory.mjs && node --check lib/memory-semantic.mjs && node --check assets/memory.js && node --check assets/memory-3d.js && node --check assets/memory-brain.js && node --check assets/memory-fullscreen.js && node --check assets/memory-layout.js && node --check lib/bridge-install.mjs && node --check lib/deploy-utils.mjs && node --check lib/deploy-tools.mjs && node --check lib/download-sources.mjs && node --check lib/uv-network.mjs && node --check tools/setup-memory.mjs",
     "test": "node --test test/*.test.mjs",
     "test:semantic": "node --test test/semantic.integration.mjs",
     "privacy": "node tools/privacy-scan.mjs",

@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "githubReleases": {
+    "university": "https://mirrors.ustc.edu.cn/github-release/",
+    "repositories": [
+      "astral-sh/uv",
+      "git-for-windows/git",
+      "astral-sh/python-build-standalone"
+    ],
+    "proxy": "https://gh-proxy.com/"
+  },
+  "git": [
+    {
+      "name": "国内 GitClone 缓存",
+      "prefix": "https://gitclone.com/github.com/"
+    },
+    {
+      "name": "GitHub 加速",
+      "prefix": "https://gh-proxy.com/https://github.com/"
+    }
+  ],
+  "huggingface": [
+    {
+      "name": "HF-Mirror",
+      "base": "https://hf-mirror.com"
+    }
+  ],
+  "pypi": [
+    {
+      "name": "国内清华 PyPI",
+      "url": "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
+    },
+    {
+      "name": "官方 PyPI",
+      "url": "https://pypi.org/simple",
+      "official": true
+    }
+  ],
+  "npm": [
+    {
+      "name": "国内 npmmirror",
+      "url": "https://registry.npmmirror.com"
+    },
+    {
+      "name": "官方 npm",
+      "url": "https://registry.npmjs.org",
+      "official": true
+    }
+  ],
+  "timeouts": {
+    "mirrorDownloadMs": 600000,
+    "officialDownloadMs": 1800000,
+    "gitMirrorMs": 600000,
+    "gitOfficialMs": 1800000,
+    "gitIdleMs": 90000,
+    "pypiMirrorMs": 600000,
+    "pypiOfficialMs": 1800000
+  },
+  "documentation": [
+    "https://mirrors.ustc.edu.cn/help/github-release.html",
+    "https://gitclone.com/",
+    "https://gh-proxy.com/",
+    "https://hf-mirror.com/",
+    "https://mirrors.tuna.tsinghua.edu.cn/help/pypi/"
+  ]
+}

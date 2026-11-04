@@ -4,7 +4,7 @@
 
 DSH 桌面版 >=0.2.1-rc.2；本次实测为桌面自带运行时 0.2.1-rc.5。缺少 Git / uv 时，插件自动下载固定版本并校验 SHA256，准备在部署根目录 `.deploy-tools/` 下；不修改系统 PATH 或全局 Python。所有真实配置、依赖、日志、人格、记忆与模型保留在你自己的数据目录，不提交到插件仓库。
 
-1. 在 DSH 插件页添加 `https://github.com/ZOTTALL/dsh-xiaoyu-qqbot/releases/download/v1.1.1/dsh-xiaoyu-qqbot-1.1.1.tgz`，重载组件并刷新页面。
+1. 在 DSH 插件页添加 `https://gh-proxy.com/https://github.com/ZOTTALL/dsh-xiaoyu-qqbot/releases/download/v1.1.2/dsh-xiaoyu-qqbot-1.1.2.tgz`，重载组件并刷新页面。
 2. 在插件「设置」填写部署根目录和 QQ 号。已有配置不要被示例覆盖；推荐使用仓库外 QQBOT_CONFIG。
 3. 在「总览」点「一键部署配套环境」，选择组件。安装器不会自动登录 QQ、批准好友或开放陌生人权限。
 4. 配置完 OneBot / 模型 / 权限后再启动服务，并按 [BRIDGE.md](BRIDGE.md) 验证两端桥接。
@@ -63,4 +63,8 @@ DSH 桌面版 >=0.2.1-rc.2；本次实测为桌面自带运行时 0.2.1-rc.5。�
 
 NapCat 的 `partial` 明确表示启动器已准备、首次初始化待完成；GPT-SoVITS 的 `partial` 表示源码已准备、环境 / 模型待补齐。账号登录、好友 / 群权限、模型密钥仍由使用者配置，不是自动安装工具的内容。
 
-直接单独运行 setup-memory.ps1 时可传 `-Uv C:/path/to/uv.exe`；正常通过控制台部署则会自动准备并传入便携 uv。
+## 1.1.2：镜像与手动入口
+
+本插件管理的安装资源默认镜像优先、官方最后，见 [MIRRORS.md](MIRRORS.md)。镜像不命中 / 哈希错误时会换源，已校验缓存直接复用。安装失败不需要清空运行目录，不会取消证书校验或改下 latest。
+
+直接运行 `tools/setup-memory.ps1` 可传 `-Uv C:/path/to/uv.exe`（>=0.13.7）；没传则自动准备工具。脚本需要 Node，优先发现本机 Node / 桌面 DSH 自带 Electron，也可传 `-Node`。正常控制台部署直接用 DSH 自带运行时执行 `setup-memory.mjs`，没有全局 Node 前置要求。Python 3.11.16 / 3.12.14 分别用于记忆 / AstrBot，固定包清单见 `tools/python-runtime.manifest.json`。

@@ -117,6 +117,8 @@
       tick()
     })
   }
+  $('b-download-sources').onclick=function(){get('download/sources').then(function(r){var p=r.policy;var rows=[['Git / uv / Python 压缩包',p.githubReleases.university+' → '+p.githubReleases.proxy+' → GitHub 官方'],['Git 源码',p.git.map(x=>x.prefix).join(' → ')+' → GitHub 官方'],['记忆模型',p.huggingface.map(x=>x.base).join(' → ')+' → https://huggingface.co'],['Python 依赖',p.pypi.map(x=>x.url).join(' → ')],['DSH 插件依赖',p.npm.map(x=>x.url).join(' → ')]];$('download-sources-list').innerHTML=rows.map(x=>'<p><strong>'+esc(x[0])+'</strong><br><code>'+esc(x[1])+'</code></p>').join('');$('download-sources-dialog').showModal()}).catch(e=>toast(e.message,true))};
+  $('b-download-sources-close').onclick=()=>$('download-sources-dialog').close();
   $('b-deploy-all').onclick=()=>document.getElementById('deploy-dialog').showModal();$('b-deploy-cancel').onclick=()=>document.getElementById('deploy-dialog').close();$('deploy-form').onsubmit=e=>{e.preventDefault();var cs=[...document.querySelectorAll('[name=component]:checked')].map(n=>n.value);if(!cs.length)return toast('至少选择一个组件',true);document.getElementById('deploy-dialog').close();runDeploy($('b-deploy-all'),'all',cs)};$('b-deploy-tools').onclick=()=>runDeploy($('b-deploy-tools'),'tools');$('b-deploy-bridge').onclick=()=>runDeploy($('b-deploy-bridge'),'bridge');$('b-deploy-memory').onclick=()=>runDeploy($('b-deploy-memory'),'memory');
   function renderChip(s) {
     var c = $('chip'); var online = !!s.bot

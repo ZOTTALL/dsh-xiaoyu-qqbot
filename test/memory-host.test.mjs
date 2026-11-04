@@ -37,3 +37,7 @@ test('memory HTTP: retain preserves existing source; settings workspace switch r
   const change=await fetch(base+'api/settings',{method:'POST',headers:{'content-type':'application/json','x-dsh-csrf':token},body:JSON.stringify({patch:{paths:{memoryDir:other}}})});assert.equal(change.status,200)
   const switched=await get('api/memory/items');assert.equal(switched.body.items.length,1);assert.match(switched.body.items[0].text,/NEW_WORKSPACE_ONLY/)
 })
+
+test('download sources HTTP: read-only inventory exposes only public mirrors and official fallback',async()=>{
+ const r=await get('api/download/sources');assert.equal(r.status,200);assert.equal(r.body.ok,true);assert.equal(r.body.policy.npm[0].url,'https://registry.npmmirror.com');assert.equal(r.body.policy.pypi.at(-1).url,'https://pypi.org/simple');assert.ok(!JSON.stringify(r.body).includes(root));assert.equal((await fetch(base+'api/download/sources',{headers:{origin:'https://invalid.example'}})).status,403)
+})
